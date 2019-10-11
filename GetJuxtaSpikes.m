@@ -10,7 +10,7 @@ if strcmpi(ops.filter, 'butterworth')
     buttOrder = ops.buttorder;
     hpFreq = ops.hpfreq; % Cut off frequency
     [b,a] = butter(buttOrder,hpFreq/(sampFreq/2),'high'); % Butterworth filter of order 6
-    filtJuxta = filter(b,a,dJuxtadata); % Will be the filtered signal
+    filtJuxta = zscore(filter(b,a,dJuxtadata)); % Will be the filtered signal
 end
 
 if strcmpi(ops.filter, 'highpass')
@@ -22,7 +22,7 @@ if strcmpi(ops.filter, 'fir1')
     % filter 3: filtfilt
     firOrder = ops.firorder;
     [b,a] = fir1(firOrder,hpFreq/(sampFreq/2),'high');
-    filtJuxta = filtfilt(b,a,dJuxtadata);
+    filtJuxta = zscore(filtfilt(b,a,dJuxtadata));
 end
 
 % Pieces of adriens code
@@ -33,14 +33,15 @@ SNRthr = ops.SNRthr;
 jSpkThr = SNRthr * std(filtJuxta);
 
 % Avoid multiple detection of same spike
-sIx = LocalMinima(dJuxtadata, 30, -jSpkThr); % TSToolbox
+sIx = LocalMinima(-filtJuxta, .1, -jSpkThr); % TSToolbox
+% sIx = find(dJuxtadata>jSpkThr);
 
 juxtaSpikes.sIx = sIx; %(voormalig findSpk) %findSpk = find(filtJuxta>(jSpkThr));
 juxtaSpikes.filtJuxta = filtJuxta;
 juxtaSpikes.times = {data.times(sIx)}; %cell array of timestamps (seconds) for each neuron
 juxtaSpikes.ts = {data.times(sIx)*sampFreq};
-
-% %Remove events too early or too late in the recording
+% 
+% % %Remove events too early or too late in the recording
 sIx(sIx<20) = [];
 sIx(sIx>length(juxtaSpikes.filtJuxta)-40) = [];
 
@@ -67,8 +68,15 @@ if templateMatch
     juxtaSpikes.spk(badIx,:) = [];
     sIx(badIx) = [];
 end
-
-figure, plot(filtJuxta), hold on, plot(sIx,repmat(8000,1,length(sIx)),'*')
+% 
+figure, plot(data.times*30000,filtJuxta), hold on,
+plot(data.times*30000,repmat(jSpkThr,1,length(data.times)),'m'),
+plot(sIx,repmat(10,1,length(sIx)),'*')
 title([sessionID],'Interpreter', 'none')
+
+
+[COEFF, SCORE, LATENT] = pca(juxtaSpikes.spk);
+figure,plot(SCORE(:,1),SCORE(:,2),'.')
+
 end
     

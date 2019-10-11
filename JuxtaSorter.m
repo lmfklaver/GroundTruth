@@ -75,16 +75,16 @@ params.juxtachan = 1;
 % variable ops
 ops.intervals = [0 Inf];%[480 Inf]; %sec
 ops.downsamplefactor = 1;
-ops.SNRthr = 16; % figure this one out per cell PARAM SEARCH
+ops.SNRthr = 8; % figure this one out per cell PARAM SEARCH
 ops.filter = 'butterworth';
-ops.hpfreq = 450;
+ops.hpfreq = 1000;
 ops.buttorder = 1;
 ops.firorder = 256;
 ops.templateMatch = 1;
 ops.spikeSamps = [-40:60];
 
 
-for iSess = 1:length(sessions)
+for iSess = 1%:length(sessions)
     basepath = fullfile('E:\Data\GroundTruth\',sessions{iSess});%'m52_190731_145204_cell3';
     cd(basepath)
     disp(['Currently evaluating session:' sessions{iSess}])
@@ -99,8 +99,7 @@ for iSess = 1:length(sessions)
     if ~isempty(sessionInfo.region)
         params.region = sessionInfo.region;
     end
-    
-    
+    help    
     if params.nChans == 33
         params.chansinorder = [13 20 28 5 9 30 3 24 31 2 4 32 1 29 23 10 8 22 11 25 21 12 7 19 14 26 18 15 6 17 16 27 0];
     elseif params.nChans == 5
@@ -116,6 +115,8 @@ for iSess = 1:length(sessions)
     [juxtaSpikes(iSess)] = GetJuxtaSpikes(juxtadata, sessions{iSess}, ops);
     
     allJuxtas(iSess) = juxtaSpikes(iSess).times;
+     
+   
 end
 %%
 %plot ACG
