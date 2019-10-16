@@ -1,4 +1,4 @@
-function  [cco_timevector,cco_indexvector] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, highestChannelCorr, lfp_extra, ops)
+function  [cco_timevector,cco_indexvector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, highestChannelCorr, lfp_extra, ops)
 
 % working on this: %if possible: split num matches, commissions and ommissions and time
 % vectors from obtaining the lfp matrices
@@ -110,6 +110,9 @@ for iExtraspike = 1:length(ExtraSpikesTimes{highestChannelCorr})
     end
 end
 
+num_CorrComOm.matches = matches;
+num_CorrComOm.omission = omission_error_num;
+num_CorrComOm.commission = commission_error_num;
 
 fprintf('Done calculating cco_timevector and cco_indexvector\n')
 
