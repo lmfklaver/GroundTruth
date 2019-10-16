@@ -21,23 +21,23 @@ extrafile = readmda('firings.mda');
 ExtraSpikes.sampleRate  = 30000;
 ExtraSpikes.shankID     = 2;
 
-% % %%%%%% BELOW IS ORIGINAL CODE %%%%%%%
-% % 
-% % 
-% % 
-% % %Define JuxtaSpikes with buzcode function get spikes
-% % JuxtaSpikes         = bz_GetSpikes;
-% % JuxtaCorr           = find(JuxtaSpikes.shankID == 2);
-% % JuxtaSpikesTimes    = JuxtaSpikes.times{JuxtaCorr};
-% % %JuxtaSpikesTimes       = resample(JuxtaSpikes.times(1, JuxtaCorr),30000,24);
-% % 
-% % %Define extra spikes with buz code function
-% % cd(pathInfo.ExtraPath);
-% % ExtraSpikes         = bz_GetSpikes;
-% % ExtraCorr           = find(ExtraSpikes.shankID == 1);
-% % ExtraSpikesTimes    = ExtraSpikes.times(ExtraCorr);
+%%%%%% BELOW IS ORIGINAL CODE %%%%%%%
 
-% ExtraSpikesTimes =round(ExtraSpikesTemp{ExtraCorr}.times,30000, 24);
+
+
+%Define JuxtaSpikes with buzcode function get spikes
+JuxtaSpikes         = bz_GetSpikes;
+JuxtaCorr           = find(JuxtaSpikes.shankID == 2);
+JuxtaSpikesTimes    = JuxtaSpikes.times{JuxtaCorr};
+%JuxtaSpikesTimes       = resample(JuxtaSpikes.times(1, JuxtaCorr),30000,24);
+
+%Define extra spikes with buz code function
+cd(pathInfo.ExtraPath);
+ExtraSpikes     = bz_GetSpikes;
+ExtraCorr       = find(ExtraSpikes.shankID == 1);
+ExtraSpikesTimes = ExtraSpikes.times(ExtraCorr);
+
+%ExtraSpikesTimes =round(ExtraSpikesTemp{ExtraCorr}.times,30000, 24);
 
 %% Make 1 struct of JC and EC
 
@@ -59,6 +59,6 @@ spikesJCEC.UID(end+1)           = JuxtaSpikes.UID(JCind);
 spikesJCEC.times(end+1)         = JuxtaSpikes.times(JCind);
 spikesJCEC.shankID(end+1)       = JuxtaSpikes.shankID(JCind);
 spikesJCEC.cluID(end+1)         = JuxtaSpikes.cluID(JCind);
-% spikesJCEC.rawWaveform(end+1)   = JuxtaSpikes.rawWaveform(JCind);
-% spikesJCEC.maxWaveformCh(end+1) = JuxtaSpikes.maxWaveformCh(JCind);
+spikesJCEC.rawWaveform(end+1)   = JuxtaSpikes.rawWaveform(JCind);
+spikesJCEC.maxWaveformCh(end+1) = JuxtaSpikes.maxWaveformCh(JCind);
 spikesJCEC.region(end+1)        = JuxtaSpikes.region(JCind);

@@ -70,11 +70,15 @@ for iSess = 6%[1,6]%:length(sessions)
     % Get Juxta Spikes
     % Load juxta chan
     %'m52_190731_145204_cell3'; %.dat
-     
-    juxtadata = getJuxtaData(basepath, datfileName, ops, params);
-    %%
-    [juxtaSpikes,allJuxtas] = GetJuxtaSpikes(juxtadata, selecSession, ops,params);
-        
+    
+%%% LOAD IN THE JUXTA AND CORRESPONDING EXTRA TIMES
+%      
+%     juxtadata = getJuxtaData(basepath, datfileName, ops, params);
+%     %%
+%     [juxtaSpikes,allJuxtas] = GetJuxtaSpikes(juxtadata, selecSession, ops,params);
+
+
+%%% END
     %% Find Ripples %% ONLY HPC AND RSC!!
     chan = bz_GetBestRippleChan(lfp);
     

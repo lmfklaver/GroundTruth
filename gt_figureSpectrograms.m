@@ -16,7 +16,6 @@ addpath(genpath('E:\Dropbox\Code\GroundTruth\'))
 % pathInfo.ExtraPath = 'E:\ReaganB\GT_Recorded_Cells\Dan Hippo Cell\1_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
 % pathInfo.Recpath = 'E:\ReaganB\GT_Recorded_Cells\Dan Hippo Cell\1_190315_152315';
 
-
 % excelDoc  = 'GT_cells.xlsx';
 % idxInExcelDoc = 9;
 
@@ -40,13 +39,15 @@ ops.numFreqs = 100;%ops.freqRange(end)-ops.freqRange(1);
 ops.bltimvec = 10*501-1+250;
 
 basepath = 'E:\Data\GroundTruth';
-
+basepathJuxta = 'E:\Data\GroundTruth\juxta_cell_output';
+basepathExtra = 'E:\Data\GroundTruth\juxta_cell_output';
+%%
 %    pathInfo
 for iSess = 1%:length(sessions)
     
     
-    pathInfo.JuxtaPath = [basepath sessions{iSess}];
-    pathInfo.Extrapath =  [basepath sessions{iSess}];
+    pathInfo.JuxtaPath = [basepathJuxta sessions{iSess}];
+    pathInfo.Extrapath =  [basepathExtra sessions{iSess}];
     pathInfo.Recpath =  [basepath sessions{iSess}];
     
     
