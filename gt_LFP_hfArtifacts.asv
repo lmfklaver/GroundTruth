@@ -97,7 +97,7 @@ for iSess = 6%[1,6]%:length(sessions)
     sampFreq = lfp.samplingRate;
     dLfpData = double(lfp.data(:,chan));
     buttOrder = ops.buttorder;
-    ripFreq = [120 200]; % Cut off frequency
+    ripFreq = [80 150]; % Cut off frequency
     %[b,a] = butter(buttOrder,[ripFreq/(sampFreq/2)],'stop'); % Butterworth filter of order \
     [b,a] = fir1(256,ripFreq/(sampFreq/2),'stop');
     filtLfpData = filtfilt(b,a,dLfpData);
@@ -138,11 +138,11 @@ for iSess = 6%[1,6]%:length(sessions)
     plotops.plotRipple = 1;
     plotops.plotRawTraces = 1;
     plotops.plotRasters = 1;
-    ops.intervals = [726.8 727.8]; %[740 742]; %EMG
-    ops.ripintervals = [468.9 469.9];%[469 470]; %Rip
+    ops.intervals = [732.5 735.5]; %EMG
+    ops.ripintervals = [469 470]; %Rip
     
     figure
-    subplot(3,2,5)
+    subplot(3,2,1)
     % plot(EMGFromLFP.timestamps, EMGFromLFP.data);
     smoothEMG = movmean(EMGFromLFP.data,.25*1250);
     plot(EMGFromLFP.timestamps,smoothEMG)
@@ -153,7 +153,7 @@ for iSess = 6%[1,6]%:length(sessions)
     box off
     set(gca,'TickDir','out')
     
-    subplot(3,2,6)
+    subplot(3,2,2)
     plot(lfp.timestamps,filtLfpData)
     hold on, 
     
@@ -168,9 +168,8 @@ for iSess = 6%[1,6]%:length(sessions)
     plot(timevec, binnedmua)
     xlabel('time (s)')
     ylabel('# spikes')
-    %title('Population synchrony: Cumulative extracellular spikes')
+    title('Population synchrony: Cumulative extracellular spikes')
     xlim([ops.intervals(1) ops.intervals(2)])
-    ylim([0 20])
     box off
     set(gca,'TickDir','out')
     
@@ -179,27 +178,23 @@ for iSess = 6%[1,6]%:length(sessions)
     plot(timevec, binnedmua)
     xlabel('time (s)')
     ylabel('# spikes')
-%     title('Population synchrony: Cumulative extracellular spikes')
+    title('Population synchrony: Cumulative extracellular spikes')
     xlim([ops.ripintervals(1) ops.ripintervals(2)])
-    ylim([0 20])
     box off
     set(gca,'TickDir','out')
     
 
     
-    subplot(3,2,1) % right now the ripple filtered channel does not look any different than the filtered channel.....
+    subplot(3,2,5) % right now the ripple filtered channel does not look any different than the filtered channel.....
     plot((1:length(rawdata))/30000,double(rawdata))  % add ,'color'  if you want all the traces to be the same color
     xlim([ops.intervals(1) ops.intervals(2)])
-    ylim([-2300 2300])
     box off
     set(gca,'TickDir','out')
     
         
-    subplot(3,2,2) % right now the ripple filtered channel does not look any different than the filtered channel.....
-    hold on 
+    subplot(3,2,6) % right now the ripple filtered channel does not look any different than the filtered channel.....
     plot((1:length(rawdata))/30000,double(rawdata))  % add ,'color'  if you want all the traces to be the same color
     xlim([ops.ripintervals(1) ops.ripintervals(2)])
-    ylim([-2300 2300])
     box off
     set(gca,'TickDir','out')
     

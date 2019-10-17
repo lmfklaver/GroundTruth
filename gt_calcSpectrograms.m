@@ -4,29 +4,40 @@ function [cco_duration, cco_data, normdata]=gt_calcSpectrograms(pathInfo,lfp_ext
 
 BLtimVec = ops.bltimvec;
 
-for i= 1:length(cco_indexvector.match)
+for ii= 1:length(cco_indexvector.match)
     % Extracellular LFP centered on juxtaspike
-    cco_duration.match(:,i) = lfp_extra.timestamps(cco_indexvector.match(i)-ops.timWinWavespec:cco_indexvector.match(i)+ops.timWinWavespec);
-    cco_data.match(:,i) = lfp_extra.data(cco_indexvector.match(i)-ops.timWinWavespec:cco_indexvector.match(i)+ops.timWinWavespec);
-    cco_duration.matchBL(:,i) = lfp_extra.timestamps(cco_indexvector.match(i)-BLtimVec:cco_indexvector.match(i)-ops.timWinWavespec); %
-    cco_data.matchBL(:,i) = lfp_extra.data(cco_indexvector.match(i)-BLtimVec:cco_indexvector.match(i)-ops.timWinWavespec);%
+    if cco_indexvector.match(ii)-ops.timWinWavespec < 0 || cco_indexvector.match(ii)-BLtimVec < 0
+        continue
+    else
+        cco_duration.match(:,ii) = lfp_extra.timestamps(cco_indexvector.match(ii)-ops.timWinWavespec:cco_indexvector.match(ii)+ops.timWinWavespec);
+        cco_data.match(:,ii) = lfp_extra.data(cco_indexvector.match(ii)-ops.timWinWavespec:cco_indexvector.match(ii)+ops.timWinWavespec);
+        cco_duration.matchBL(:,ii) = lfp_extra.timestamps(cco_indexvector.match(ii)-BLtimVec:cco_indexvector.match(ii)-ops.timWinWavespec); %
+        cco_data.matchBL(:,ii) = lfp_extra.data(cco_indexvector.match(ii)-BLtimVec:cco_indexvector.match(ii)-ops.timWinWavespec);%
+    end
 end
 
-for i = 1:length(cco_indexvector.om)
-    % Extracellular LFP centered on juxtaspike
-    cco_duration.omission(:,i) = lfp_extra.timestamps(cco_indexvector.om(i)-ops.timWinWavespec:cco_indexvector.om(i)+ops.timWinWavespec);
-    cco_data.omission(:,i) = lfp_extra.data(cco_indexvector.om(i)-ops.timWinWavespec:cco_indexvector.om(i)+ops.timWinWavespec);
-    cco_duration.omissionBL(:,i) = lfp_extra.timestamps(cco_indexvector.om(i)-BLtimVec:cco_indexvector.om(i)-ops.timWinWavespec); %
-    cco_data.omissionBL(:,i) = lfp_extra.data(cco_indexvector.om(i)-BLtimVec:cco_indexvector.om(i)-ops.timWinWavespec);%
+for ii = 1:length(cco_indexvector.om)
+    if cco_indexvector.om(ii)-ops.timWinWavespec < 0 || cco_indexvector.om(ii)-BLtimVec < 0
+        continue
+    else
+        % Extracellular LFP centered on juxtaspike
+        cco_duration.omission(:,ii) = lfp_extra.timestamps(cco_indexvector.om(ii)-ops.timWinWavespec:cco_indexvector.om(ii)+ops.timWinWavespec);
+        cco_data.omission(:,ii) = lfp_extra.data(cco_indexvector.om(ii)-ops.timWinWavespec:cco_indexvector.om(ii)+ops.timWinWavespec);
+        cco_duration.omissionBL(:,ii) = lfp_extra.timestamps(cco_indexvector.om(ii)-BLtimVec:cco_indexvector.om(ii)-ops.timWinWavespec); %
+        cco_data.omissionBL(:,ii) = lfp_extra.data(cco_indexvector.om(ii)-BLtimVec:cco_indexvector.om(ii)-ops.timWinWavespec);%
+    end
 end
 
-for i = 1:length(cco_indexvector.com)
-    % Extracellular LFP centered on extraspike
-    cco_duration.commission(:,i) = lfp_extra.timestamps(cco_indexvector.com(i)-ops.timWinWavespec:cco_indexvector.com(i)+ops.timWinWavespec);
-    cco_data.commission(:,i) = lfp_extra.data(cco_indexvector.com(i)-ops.timWinWavespec:cco_indexvector.com(i)+ops.timWinWavespec);
-    cco_duration.commissionBL(:,i) = lfp_extra.timestamps(cco_indexvector.com(i)-BLtimVec:cco_indexvector.com(i)-ops.timWinWavespec); %
-    cco_data.commissionBL(:,i) = lfp_extra.data(cco_indexvector.com(i)-BLtimVec:cco_indexvector.com(i)-ops.timWinWavespec);%
-    
+for ii = 1:length(cco_indexvector.com)
+    if cco_indexvector.com(ii)-ops.timWinWavespec < 0 || cco_indexvector.com(ii)-BLtimVec < 0
+        continue
+    else
+        % Extracellular LFP centered on extraspike
+        cco_duration.commission(:,ii) = lfp_extra.timestamps(cco_indexvector.com(ii)-ops.timWinWavespec:cco_indexvector.com(ii)+ops.timWinWavespec);
+        cco_data.commission(:,ii) = lfp_extra.data(cco_indexvector.com(ii)-ops.timWinWavespec:cco_indexvector.com(ii)+ops.timWinWavespec);
+        cco_duration.commissionBL(:,ii) = lfp_extra.timestamps(cco_indexvector.com(ii)-BLtimVec:cco_indexvector.com(ii)-ops.timWinWavespec); %
+        cco_data.commissionBL(:,ii) = lfp_extra.data(cco_indexvector.com(ii)-BLtimVec:cco_indexvector.com(ii)-ops.timWinWavespec);%
+    end
 end
 
 %% Replace .data and .timestamps of channel lfp

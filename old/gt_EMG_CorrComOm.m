@@ -16,7 +16,6 @@ ops.bltimvec = 10*501-1+250;
 %% Juxta Sorter Spikes
 %Use juxta sorter to get juxta spikes
 
-
 %% Get EMG movement timestamps and rest timestamps
 % [EMG_info] = gt_LFP_hfArtifacts(juxtaSpikes)
 

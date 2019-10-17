@@ -31,7 +31,7 @@ areas = {'hpc','hpc','cx','hpc','hpc','hpc','th'};
 
 
 %   Options
-ops.rangeSpkBin = .002; %binsize for extra occurring before or after juxta % maybe a bit wider for james' irc2 output?
+ops.rangeSpkBin = .001; %binsize for extra occurring before or after juxta % maybe a bit wider for james' irc2 output?
 ops.timWinWavespec = 250; %ms
 ops.doSave = 0;
 ops.freqRange = [1 500];
@@ -47,7 +47,7 @@ params.Probeflip = flip(params.Probe0idx);
 params.Probeflip(1) = []; % rm juxta
 %%
 %    pathInfo
-for iSess = 6:length(sessions)
+for iSess = 5:length(sessions)
     
     
     pathInfo.JuxtaPath =  [pathJuxtaExtra.JuxtaPath sessions{iSess}];

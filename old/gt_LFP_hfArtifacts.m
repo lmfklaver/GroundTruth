@@ -65,7 +65,7 @@ for iSess = 6%[1,6]%:length(sessions)
     end
     % Load LFP
     datfileName = [sessions{iSess} '.dat'];
-    lfp = bz_GetLFP('all','basename', selecSession);
+    lfp = bz_GetLFP('all','basename', selecSession,'noPrompts',true);
     
     % Get Juxta Spikes
     % Load juxta chan
@@ -76,20 +76,14 @@ for iSess = 6%[1,6]%:length(sessions)
 %     juxtadata = getJuxtaData(basepath, datfileName, ops, params);
 %     %%
 %     [juxtaSpikes,allJuxtas] = GetJuxtaSpikes(juxtadata, selecSession, ops,params);
-%% Using JAMES .mda files-- get juxta spikes
-    pathInfoJames.JuxtaPath = 'E:\Data\GroundTruth\juxta_cell_output\m15_190315_152315_cell1';
-    pathInfoJames.ExtraPath = 'E:\Data\GroundTruth\juxta_cell_output\m15_190315_152315_cell1';
 
-    pathInfo = 'E:\Data\GroundTruth\m15_190315_152315_cell1';
-   % Get Times
- 
-   %
-            [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtra(pathInfo, pathInfoJames);
+
 %%% END
     %% Find Ripples %% ONLY HPC AND RSC!!
     chan = bz_GetBestRippleChan(lfp);
     
-    [ripples] = bz_FindRipples(lfp.data(:,chan),lfp.timestamps,'thresholds',[1 4]); %may have to give date,  line 374
+    [ripples] = bz_FindRipples(lfp.data(:,chan),lfp.timestamps,'thresholds', [1 3]); %may have to give date,  line 374
+    %change the first one to detect better
     
     rawdata = bz_LoadBinary(datfileName,'frequency',30000,'nChannels',33,'channels',chan);
 
@@ -97,7 +91,7 @@ for iSess = 6%[1,6]%:length(sessions)
     sampFreq = lfp.samplingRate;
     dLfpData = double(lfp.data(:,chan));
     buttOrder = ops.buttorder;
-    ripFreq = [120 200]; % Cut off frequency
+    ripFreq = [80 150]; % Cut off frequency
     %[b,a] = butter(buttOrder,[ripFreq/(sampFreq/2)],'stop'); % Butterworth filter of order \
     [b,a] = fir1(256,ripFreq/(sampFreq/2),'stop');
     filtLfpData = filtfilt(b,a,dLfpData);
@@ -105,31 +99,8 @@ for iSess = 6%[1,6]%:length(sessions)
     % To determine: How do we select what channel we take as a reference?
     % Different # of ripples for different channels
     
-    % make ripple blocks to plot
-        allRipIdx = [];
-        for iRip = 1:length(ripples.timestamps)
-            ripLogic = find(lfp.timestamps>ripples.timestamps(iRip,1) & lfp.timestamps<ripples.timestamps(iRip,2));
-            allRipIdx = [allRipIdx; ripLogic];
-        end
-
-        rippTs = lfp.timestamps(allRipIdx);
-        rippLogic = ismember(lfp.timestamps,rippTs);
-
-   
-    %% Population Synchrony cumulSpikeRate: 
-    cd(pathInfoJames.JuxtaPath)
-    e_spikes = readmda('firings.mda');
-    [viTime_spk, viClu_spk] = deal(e_spikes(2,:), e_spikes(3,:));
-    
-    binSize = 0.01; %s;
-    binnedmua = hist(viTime_spk,round(viTime_spk(end)/30000/binSize));
-    timevec = 1:length(binnedmua);
-    timevec = timevec * binSize;
-
     
     %% pseudo EMG from LFP
-    cd(pathInfo)
-    
     [EMGFromLFP] = bz_EMGFromLFP(cd,'overwrite',true,'rejectChannels', 0,'samplingFrequency', 1250,'noPrompts',true); % 0 is juxtachan
     
     
@@ -138,11 +109,10 @@ for iSess = 6%[1,6]%:length(sessions)
     plotops.plotRipple = 1;
     plotops.plotRawTraces = 1;
     plotops.plotRasters = 1;
-    ops.intervals = [726.8 727.8]; %[740 742]; %EMG
-    ops.ripintervals = [468.9 469.9];%[469 470]; %Rip
+    ops.intervals = [732 734];%[230 231];
     
     figure
-    subplot(3,2,5)
+    subplot(4,1,1)
     % plot(EMGFromLFP.timestamps, EMGFromLFP.data);
     smoothEMG = movmean(EMGFromLFP.data,.25*1250);
     plot(EMGFromLFP.timestamps,smoothEMG)
@@ -153,77 +123,38 @@ for iSess = 6%[1,6]%:length(sessions)
     box off
     set(gca,'TickDir','out')
     
-    subplot(3,2,6)
+    subplot(4,1,2)
     plot(lfp.timestamps,filtLfpData)
-    hold on, 
-    
-        plot(lfp.timestamps,filtLfpData) % THIS IS ALREADY IN THE CURRENT CODE
-        hold on,
-        plot(lfp.timestamps,rippLogic*2000)
-    plot(ripples.peaks,repmat(100,length(ripples.peaks),1), '*')
-    xlim([ops.ripintervals(1) ops.ripintervals(2)])
-    box off
-    
-    subplot (3,2,3)
-    plot(timevec, binnedmua)
-    xlabel('time (s)')
-    ylabel('# spikes')
-    %title('Population synchrony: Cumulative extracellular spikes')
+    hold on, plot(ripples.peaks,repmat(100,length(ripples.peaks),1), '*')
     xlim([ops.intervals(1) ops.intervals(2)])
-    ylim([0 20])
     box off
-    set(gca,'TickDir','out')
     
-    
-    subplot (3,2,4)
-    plot(timevec, binnedmua)
-    xlabel('time (s)')
-    ylabel('# spikes')
-%     title('Population synchrony: Cumulative extracellular spikes')
-    xlim([ops.ripintervals(1) ops.ripintervals(2)])
-    ylim([0 20])
-    box off
-    set(gca,'TickDir','out')
-    
-
-    
-    subplot(3,2,1) % right now the ripple filtered channel does not look any different than the filtered channel.....
+    subplot(4,1,3) % right now the ripple filtered channel does not look any different than the filtered channel.....
     plot((1:length(rawdata))/30000,double(rawdata))  % add ,'color'  if you want all the traces to be the same color
     xlim([ops.intervals(1) ops.intervals(2)])
-    ylim([-2300 2300])
     box off
     set(gca,'TickDir','out')
     
-        
-    subplot(3,2,2) % right now the ripple filtered channel does not look any different than the filtered channel.....
-    hold on 
-    plot((1:length(rawdata))/30000,double(rawdata))  % add ,'color'  if you want all the traces to be the same color
-    xlim([ops.ripintervals(1) ops.ripintervals(2)])
-    ylim([-2300 2300])
+    % rasters
+    subplot(4,1,4)
+    spikes = juxtaSpikes;
+    
+    yTMmax = 0;
+    yTMmin = 1;
+    for idx_hMFR = 1 %clusters sorted by descending meanFR
+        for iSpk = 1:length(spikes.times{idx_hMFR})
+            if spikes.times{idx_hMFR}(iSpk) > ops.intervals(1)  && spikes.times{idx_hMFR}(iSpk) <ops.intervals(2)
+                line([spikes.times{idx_hMFR}(iSpk) spikes.times{idx_hMFR}(iSpk)],[yTMmin yTMmax]),
+                hold on
+            end
+        end
+        yTMmin = yTMmin-plotops.rasterstepY;
+        yTMmax = yTMmax-plotops.rasterstepY;
+    end
+    ylim([-0.5 1.5])
+    xlim([ops.intervals(1) ops.intervals(2)])
     box off
     set(gca,'TickDir','out')
-    
-    
-%     % rasters
-%     subplot(5,1,5)
-%     spikes = juxtaSpikes;
-%     
-%     yTMmax = 0;
-%     yTMmin = 1;
-%     for idx_hMFR = 1 %clusters sorted by descending meanFR
-%         for iSpk = 1:length(JuxtaSpikesTimes)
-%             if JuxtaSpikesTimes(iSpk) > ops.intervals(1)  && JuxtaSpikesTimes(iSpk) <ops.intervals(2)
-%                 line([JuxtaSpikesTimes(iSpk) JuxtaSpikesTimes(iSpk)],[yTMmin yTMmax]),
-%                 hold on
-%             end
-%         end
-%         yTMmin = yTMmin-plotops.rasterstepY;
-%         yTMmax = yTMmax-plotops.rasterstepY;
-%     end
-%     ylim([-0.5 1.5])
-%     xlim([ops.intervals(1) ops.intervals(2)])
-%     box off
-%     set(gca,'TickDir','out')
     
 end
 
