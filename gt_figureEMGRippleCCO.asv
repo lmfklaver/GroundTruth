@@ -37,6 +37,8 @@ for iSess = 1%1:length(sessions)
     cd(pathInfo.RecPath);
     
     selecSession = sessions{iSess};
+        datfileName = [sessions{iSess} '.dat'];
+
     
     disp(['Currently evaluating session:' sessions{iSess}])
     sessionInfo = bz_getSessionInfo(cd);
@@ -77,6 +79,17 @@ for iSess = 1%1:length(sessions)
     % get matches, commissions , omissions
     [cco_timevector,cco_indexvector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, highestChannelCorr, lfp_extra, ops);
 
+    %% Get Ripple Data
+    % Find Ripples % ONLY HPC AND RSC Recordings
+    chan    = bz_GetBestRippleChan(lfp);
+    ripples = bz_FindRipples(lfp.data(:,chan),lfp.timestamps,'thresholds',[1 4]); 
+    % check the raw data (and plot the blocks? See gt_LFP_hfArtifacts.m)
+    % if the ripple detection is not working well, play around with the
+    % threshods per session (default = [2 5])
+    
+    % ripples.timestamps(1) and ripples.timestamps(2) are the start and
+    % stop times of the ripples
+    
     %% Get LFP data / raw data for sanity checks! I suggest checking them with raw data. 
     lfp         = bz_GetLFP('all','basename', selecSession); %
     rawdata     = bz_LoadBinary(datfileName,'frequency',params.sampFreq,'nChannels',33,'channels',chan);
@@ -85,7 +98,7 @@ for iSess = 1%1:length(sessions)
     cd(pathInfo.RecPath)
     
     [EMGFromLFP] = bz_EMGFromLFP(cd,'overwrite',true,'rejectChannels', 0,'samplingFrequency', 1250,'noPrompts',true); % 0 is juxtachan
-    smoothEMG    = movmean(EMGFromLFP.data,.25*1250);
+    smoothEMG    = movmean(EMGFromLFP.data,.25*1250); % 0.25 s sliding window, lfp-samprate is 1250
     
     %% Get timestamps of when there is movement
     
@@ -99,25 +112,19 @@ for iSess = 1%1:length(sessions)
     
     %% Get matches, commission, and omission errors for rest time periods
     [pt_CorrComOm] = gt_CorrComOm_BiologicalVariable (rest_start_stop, cco_timevector.match, cco_timevector.om, cco_timevector.com);
+    %%%!!!! gt_CorrComOm_BiologicalVariable gives NaNs, so this script
+    %%%needs to be tested a bit better!!! %%%
     
     % Sanity check :)
     figure
-    plot(EMGFromLFP.timestamps, EMGFromLFP.data, '.r');
-    hold on
-    plot(lfp.timestamps,lfp.data(:,20))
+    plot(EMGFromLFP.timestamps, smoothEMG, '.r');
+    %hold on
+    %plot(lfp.timestamps,rawdata)
     
     %% Same thing for Ripples -- TO IMPLEMENT
-    % Find Ripples % ONLY HPC AND RSC Recordings
-    chan    = bz_GetBestRippleChan(lfp);
-    ripples = bz_FindRipples(lfp.data(:,chan),lfp.timestamps,'thresholds',[1 4]); 
-    % check the raw data (and plot the blocks? See gt_LFP_hfArtifacts.m)
-    % if the ripple detection is not working well, play around with the
-    % threshods per session (default = [2 5])
     
-    % ripples.timestamps(1) and ripples.timestamps(2) are the start and
-    % stop times of the ripples
     
-    [pt_CorrComOm] = gt_CorrComOm_BiologicalVariable (rest_start_stop, cco_timevector.match, cco_timevector.om, cco_timevector.com);
+    [pt_CorrComOm_rip] = gt_CorrComOm_BiologicalVariable (rest_start_stop, cco_timevector.match, cco_timevector.om, cco_timevector.com);
 
 end
 
