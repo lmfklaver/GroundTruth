@@ -20,7 +20,7 @@ for iSpikeJuxta = 1:length(JuxtaSpikesTimes) %4
     matchCount = 0;
     selectedJuxtaSpike = JuxtaSpikesTimes(iSpikeJuxta);
     
-    for iSpikeExtra = 1:length(ExtraSpikesTimes{highestChannelCorr})
+    for iSpikeExtra = 1:length({highestChannelCorr})
         selectedExtraSpike = ExtraSpikesTimes{highestChannelCorr}(iSpikeExtra);
         
         % Find Matches (Juxta V, Extra V) Extracellular lfp timestamp centered on Juxtaspike

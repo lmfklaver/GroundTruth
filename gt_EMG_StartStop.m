@@ -1,4 +1,4 @@
-function [rest_start_stop] = gt_EMG_CorrComOm(EMG_info,params)
+function [rest_start_stop] = gt_EMG_StartStop(EMG_info,params)
 %Dependencies
 %   gt_LFP_hfArtifacts -- relies on juxta sorter
 %   GetJuxtaSpikes -- some juxta spike function
@@ -15,11 +15,11 @@ function [rest_start_stop] = gt_EMG_CorrComOm(EMG_info,params)
    % datapoints than on the LFP (may not matter)
    
    %Create Vectors for start times and stop times
-   rest_start = []; % rest = Non-EMG activity, EMGcorr<threshold - now set at .8
-   rest_stop = [];
-   start_idx = 0;
-   stop_idx = 0;
-   sanity = 0;
+   rest_start   = []; % rest = Non-EMG activity, EMGcorr<threshold - now set at .8
+   rest_stop    = [];
+   start_idx    = 0;
+   stop_idx     = 0;
+   % sanity       = 0;
    
    %Go through each rest timestamp -- will be comparing each timestamp to
    %before and after timestamps to see how long each rest interval is

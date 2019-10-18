@@ -1,3 +1,5 @@
+%% This script is gets the spectrogram figures out
+
 % Lianne's adaptation of Reagan's script
 
 % addpaths
