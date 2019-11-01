@@ -8,7 +8,8 @@ ExtraPath = pathInfo.ExtraPath;%'E:\Data\GroundTruth\m15_190315_152315\Kilosort_
 
 %Define JuxtaSpikes with buzcode function get spikes
 cd(JuxtaPath)
-JuxtaSpikes         = bz_GetSpikes('noPrompts' , true);
+%JuxtaSpikes         = bz_GetSpikes('noPrompts' , true);
+JuxtaSpikes         = bz_GetSpikes;
 JuxtaCorr          = find(JuxtaSpikes.shankID == 2);
 JuxtaSpikesTimes    = JuxtaSpikes.times{JuxtaCorr};
 
@@ -16,11 +17,12 @@ JuxtaSpikesTimes    = JuxtaSpikes.times{JuxtaCorr};
 
 %Define extra spikes with buz code function
 cd(ExtraPath);
-ExtraSpikes         = bz_GetSpikes('noPrompts' , true);
+%ExtraSpikes         = bz_GetSpikes('noPrompts' , true);
+ExtraSpikes         = bz_GetSpikes;
 ExtraCorr           = find(ExtraSpikes.shankID == 1);
 ExtraSpikesTimes    = ExtraSpikes.times(ExtraCorr);
 
-% ExtraSpikesTimes =round(ExtraSpikesTemp{ExtraCorr}.times,30000, 24);
+%ExtraSpikesTimes =round(ExtraSpikesTemp{ExtraCorr}.times,30000, 24);
 
 
 %% Make 1 struct of JC and EC

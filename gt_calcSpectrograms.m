@@ -1,49 +1,49 @@
-function [cco_duration, cco_data, normdata]=gt_calcSpectrograms(pathInfo,lfp_extra, cco_indexvector,ops)
+function [cco_duration, cco_data, normdata]=gt_calcSpectrograms(pathInfo,lfp_extra, cco_indexvector,opts)
 %working on this: should contain "get lfp matrices, calculate spectrograms,
 %normalize spectrograms"
 
-BLtimVec = ops.bltimvec;
+BLtimVec = opts.bltimvec;
 
-for ii= 1:length(cco_indexvector.match)
+for ii= 1:length(cco_indexvector.matches)
     % Extracellular LFP centered on juxtaspike
-    if cco_indexvector.match(ii)-ops.timWinWavespec < 0 || cco_indexvector.match(ii)-BLtimVec < 0
+    if cco_indexvector.matches(ii)-opts.timWinWavespec < 0 || cco_indexvector.matches(ii)-BLtimVec < 0
         continue
     else
-        cco_duration.match(:,ii) = lfp_extra.timestamps(cco_indexvector.match(ii)-ops.timWinWavespec:cco_indexvector.match(ii)+ops.timWinWavespec);
-        cco_data.match(:,ii) = lfp_extra.data(cco_indexvector.match(ii)-ops.timWinWavespec:cco_indexvector.match(ii)+ops.timWinWavespec);
-        cco_duration.matchBL(:,ii) = lfp_extra.timestamps(cco_indexvector.match(ii)-BLtimVec:cco_indexvector.match(ii)-ops.timWinWavespec); %
-        cco_data.matchBL(:,ii) = lfp_extra.data(cco_indexvector.match(ii)-BLtimVec:cco_indexvector.match(ii)-ops.timWinWavespec);%
+        cco_duration.matches(:,ii) = lfp_extra.timestamps(cco_indexvector.matches(ii)-opts.timWinWavespec:cco_indexvector.matches(ii)+opts.timWinWavespec);
+        cco_data.matches(:,ii) = lfp_extra.data(cco_indexvector.matches(ii)-opts.timWinWavespec:cco_indexvector.matches(ii)+opts.timWinWavespec);
+        cco_duration.matchBL(:,ii) = lfp_extra.timestamps(cco_indexvector.matches(ii)-BLtimVec:cco_indexvector.matches(ii)-opts.timWinWavespec); %
+        cco_data.matchBL(:,ii) = lfp_extra.data(cco_indexvector.matches(ii)-BLtimVec:cco_indexvector.matches(ii)-opts.timWinWavespec);%
     end
 end
 
-for ii = 1:length(cco_indexvector.om)
-    if cco_indexvector.om(ii)-ops.timWinWavespec < 0 || cco_indexvector.om(ii)-BLtimVec < 0
+for ii = 1:5255  %length(cco_indexvector.om)
+    if cco_indexvector.om(ii)-opts.timWinWavespec < 0 || cco_indexvector.om(ii)-BLtimVec < 0 
         continue
     else
         % Extracellular LFP centered on juxtaspike
-        cco_duration.omission(:,ii) = lfp_extra.timestamps(cco_indexvector.om(ii)-ops.timWinWavespec:cco_indexvector.om(ii)+ops.timWinWavespec);
-        cco_data.omission(:,ii) = lfp_extra.data(cco_indexvector.om(ii)-ops.timWinWavespec:cco_indexvector.om(ii)+ops.timWinWavespec);
-        cco_duration.omissionBL(:,ii) = lfp_extra.timestamps(cco_indexvector.om(ii)-BLtimVec:cco_indexvector.om(ii)-ops.timWinWavespec); %
-        cco_data.omissionBL(:,ii) = lfp_extra.data(cco_indexvector.om(ii)-BLtimVec:cco_indexvector.om(ii)-ops.timWinWavespec);%
+        cco_duration.omission(:,ii) = lfp_extra.timestamps(cco_indexvector.om(ii)-opts.timWinWavespec:cco_indexvector.om(ii)+opts.timWinWavespec);
+        cco_data.omission(:,ii) = lfp_extra.data(cco_indexvector.om(ii)-opts.timWinWavespec:cco_indexvector.om(ii)+opts.timWinWavespec);
+        cco_duration.omissionBL(:,ii) = lfp_extra.timestamps(cco_indexvector.om(ii)-BLtimVec:cco_indexvector.om(ii)-opts.timWinWavespec); %
+        cco_data.omissionBL(:,ii) = lfp_extra.data(cco_indexvector.om(ii)-BLtimVec:cco_indexvector.om(ii)-opts.timWinWavespec);%
     end
 end
 
 for ii = 1:length(cco_indexvector.com)
-    if cco_indexvector.com(ii)-ops.timWinWavespec < 0 || cco_indexvector.com(ii)-BLtimVec < 0
+    if cco_indexvector.com(ii)-opts.timWinWavespec < 0 || cco_indexvector.com(ii)-BLtimVec < 0
         continue
     else
         % Extracellular LFP centered on extraspike
-        cco_duration.commission(:,ii) = lfp_extra.timestamps(cco_indexvector.com(ii)-ops.timWinWavespec:cco_indexvector.com(ii)+ops.timWinWavespec);
-        cco_data.commission(:,ii) = lfp_extra.data(cco_indexvector.com(ii)-ops.timWinWavespec:cco_indexvector.com(ii)+ops.timWinWavespec);
-        cco_duration.commissionBL(:,ii) = lfp_extra.timestamps(cco_indexvector.com(ii)-BLtimVec:cco_indexvector.com(ii)-ops.timWinWavespec); %
-        cco_data.commissionBL(:,ii) = lfp_extra.data(cco_indexvector.com(ii)-BLtimVec:cco_indexvector.com(ii)-ops.timWinWavespec);%
+        cco_duration.commission(:,ii) = lfp_extra.timestamps(cco_indexvector.com(ii)-opts.timWinWavespec:cco_indexvector.com(ii)+opts.timWinWavespec);
+        cco_data.commission(:,ii) = lfp_extra.data(cco_indexvector.com(ii)-opts.timWinWavespec:cco_indexvector.com(ii)+opts.timWinWavespec);
+        cco_duration.commissionBL(:,ii) = lfp_extra.timestamps(cco_indexvector.com(ii)-BLtimVec:cco_indexvector.com(ii)-opts.timWinWavespec); %
+        cco_data.commissionBL(:,ii) = lfp_extra.data(cco_indexvector.com(ii)-BLtimVec:cco_indexvector.com(ii)-opts.timWinWavespec);%
     end
 end
 
 %% Replace .data and .timestamps of channel lfp
 %make copies of big files so can manipulate them seperately
 
-cd(pathInfo.Recpath);
+cd(pathInfo.RecPath); % hi Reagan, somehow, this changed over functions between a lowercase p to a higher case p. should work now.
 
 %make copies of lfp files
 lfp_com_error       = lfp_extra;
@@ -56,7 +56,7 @@ lfp_com_error_bl    = lfp_extra;
 clear lfp_extra
 
 %matches
-lfp_matches.timestamps = cco_duration.match;
+lfp_matches.timestamps = cco_duration.matches;
 lfp_matches.data       = cco_data.match;
 lfp_matches_bl.timestamps = cco_duration.matchBL;
 lfp_matches_bl.data       = cco_data.matchBL;
@@ -80,8 +80,8 @@ cco_data = 1;
 
 fprintf('Done with getting cco_duration and cco_data, ready to calculate wavespec\n')
 %% Loop wavespec over the columns(spikes) for each cell
-freqRange   = ops.freqRange;
-numFreqs    = ops.numFreqs;
+freqRange   = opts.freqRange;
+numFreqs    = opts.numFreqs;
 
 % to run through each event set and run wavespec on it(assuming each collumn is a time stamp and each row is one of 501 time/data stamps)
 [normdata.match] = getNormWavespecCCO(lfp_matches, lfp_matches_bl,freqRange,numFreqs);
@@ -95,7 +95,7 @@ disp('almost there')
 [normdata.com] = getNormWavespecCCO(lfp_com_error, lfp_com_error_bl,freqRange,numFreqs);
 disp('whoooo done')
 
-if ops.doSave
+if opts.doSave
     save normwavespecdata normdata
 end
 

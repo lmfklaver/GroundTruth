@@ -26,17 +26,28 @@ function [rest_start_stop] = gt_EMG_StartStop(EMG_info,params)
    for rest_idx = 1:(length(EMG_info.rest_timestamps)-1) %FIGURE out how to account for last timestamp
        % Define current timestamp index   
           rest_time = EMG_info.rest_timestamps(rest_idx);
+          rest_idx_dtpt = EMG_info.idx_rest_datapoints(rest_idx);
        % Define comparison after timestamp 
           comp_idx_after = rest_idx + 1;
+          comp_idx_dtpt = EMG_info.idx_rest_datapoints(comp_idx_after);
           comparison_time_after = EMG_info.rest_timestamps(comp_idx_after);
        % Define Interval between current and after timestamps
           comp_interval_after = round((comparison_time_after - rest_time),4); %rounding difference to 4 decimals
-      
+            comp_interval_indices = comp_idx_dtpt - rest_idx_dtpt;
       % Account for 1st timestamp
-      if (rest_idx == 1) && (comp_interval_after == .0008)
-          rest_start(1) = EMG_info.rest_timestamps(1);
-      end
+      %if (rest_idx == 1) && (comp_interval_after == .0008)
+%       rest_start(1) = EMG_info.rest_timestamps(1);
+%    end
 
+      if comp_interval_indices == 1
+         continue 
+      elseif comp_interval_indices ~= 1 
+          move_start(countStart) = EMG_info.rest_timestamps(rest_idx);
+          move_stop(countStop) = EMG_info.rest_timestamps(comp_idx_dtpt);
+      end
+      
+      
+        
       % Account for rest of timestamps
       if (rest_idx > 1) && (rest_idx < length(EMG_info.rest_timestamps)) %staying within bounds
          % Define comparison before timestamp

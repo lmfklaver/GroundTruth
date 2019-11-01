@@ -33,7 +33,7 @@ end
 
         total_commission = length(com_timestamps);
 
-        pt_CorrComOm.commission = commission_num/totalmatches;
+        pt_CorrComOm.commission = commission_num/total_commission;
  
  %% Omission Error
  
@@ -50,7 +50,7 @@ end
 
         total_omission = length(om_timestamps);
 
-        pt_CorrComOm.omission = omission_num/totalmatches;
+        pt_CorrComOm.omission = omission_num/total_omission;
  
        
 end

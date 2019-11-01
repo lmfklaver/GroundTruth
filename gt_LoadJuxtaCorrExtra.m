@@ -17,7 +17,7 @@ maxCC = max(max(checkCorrs)); % gives you EC cluster with highest correlation to
 highestChannelCorr = spikesJCEC.maxWaveformCh(c); % channel on which waveform is highest
 
 %cd(pathInfo.Recpath)
-cd(pathInfo.Recpath)
+cd(pathInfo.RecPath)
 
 lfp_juxta = bz_GetLFP(0); % recorded juxta channel
 lfp_extra = bz_GetLFP(highestChannelCorr); % matching extracellular channel
