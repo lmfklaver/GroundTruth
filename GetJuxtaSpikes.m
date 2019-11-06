@@ -1,74 +1,12 @@
-function [juxtaSpikes] = GetJuxtaSpikes(data, sessionID, ops)
+function [juxtaSpikes, allJuxtas] = GetJuxtaSpikes(basepath, selecSession, ops, params)
 
-templateMatch = ops.templateMatch;
-sampFreq = data.samplingRate;
+        datfileName = [selecSession '.dat'];%'m52_190731_145204_cell3'; %.dat
 
-dJuxtadata = double(data.data);
-
-if strcmpi(ops.filter, 'butterworth')
-    %  filter 1: butterworth
-    buttOrder = ops.buttorder;
-    hpFreq = ops.hpfreq; % Cut off frequency
-    [b,a] = butter(buttOrder,hpFreq/(sampFreq/2),'high'); % Butterworth filter of order 6
-    filtJuxta = filter(b,a,dJuxtadata); % Will be the filtered signal
+        % Load juxta chan
+        juxtadata = getJuxtaData(basepath, datfileName, ops, params);
+        
+        % Detect spikes above threshold
+        [juxtaSpikes] = DetectJuxtaSpikes(juxtadata, selecSession, ops);
+         allJuxtas = juxtaSpikes.times;
+        % To implement: manual rejection with rejectDetectedSpikes
 end
-
-if strcmpi(ops.filter, 'highpass')
-    % filter 2: built-in highpass
-    filtJuxta = highpass(-dJuxtadata,hpFreq,sampFreq);
-end
-
-if strcmpi(ops.filter, 'fir1')
-    % filter 3: filtfilt
-    firOrder = ops.firorder;
-    [b,a] = fir1(firOrder,hpFreq/(sampFreq/2),'high');
-    filtJuxta = filtfilt(b,a,dJuxtadata);
-end
-
-% Pieces of adriens code
-tIx = ops.spikeSamps;
-
-% %Define the threshold
-SNRthr = ops.SNRthr;
-jSpkThr = SNRthr * std(filtJuxta);
-
-% Avoid multiple detection of same spike
-sIx = LocalMinima(dJuxtadata, 30, -jSpkThr); % TSToolbox
-
-juxtaSpikes.sIx = sIx; %(voormalig findSpk) %findSpk = find(filtJuxta>(jSpkThr));
-juxtaSpikes.filtJuxta = filtJuxta;
-juxtaSpikes.times = {data.times(sIx)}; %cell array of timestamps (seconds) for each neuron
-juxtaSpikes.ts = {data.times(sIx)*sampFreq};
-
-% %Remove events too early or too late in the recording
-sIx(sIx<20) = [];
-sIx(sIx>length(juxtaSpikes.filtJuxta)-40) = [];
-
-%Select all spk from raw trace
-sIxAll = repmat(tIx,[length(sIx) 1])+repmat(sIx(:),[1 length(tIx)]);
-juxtaSpikes.spk = dJuxtadata(sIxAll);
-juxtaSpikes.mSpk = mean(juxtaSpikes.spk);
-
-% add ncessary fields for spike struct comptible with buzcode
-juxtaSpikes.rawWaveform = {mean(juxtaSpikes.spk)}; % average waveform on maxWaveformCh (from raw .dat)
-juxtaSpikes.UID     = [0]; %unique identifier for each neuron in a recording
-juxtaSpikes.shankID = [10]; % shank ID that each neuron was recorded on
-juxtaSpikes.maxWaveFormCh = [1]; % channel # with largest amplitude spike for each neuron
-juxtaSpikes.region = {''};
-juxtaSpikes.numcells = length(juxtaSpikes.UID); %number of cells/UIDs
-
-%juxtaSpikes.sessionName    %-name of recording file
-%juxtaSpikes.spindices      %-sorted vector of [spiketime UID], useful for input to some functions and plotting rasters
-%juxtaSpikes.cluID          %-cluster ID, NOT UNIQUE ACROSS SHANKS
-
-if templateMatch
-    C = zscore(double(juxtaSpikes.mSpk))*zscore(double(juxtaSpikes.spk)')/length(tIx);
-    badIx = find(C<0.70);
-    juxtaSpikes.spk(badIx,:) = [];
-    sIx(badIx) = [];
-end
-
-figure, plot(filtJuxta), hold on, plot(sIx,repmat(8000,1,length(sIx)),'*')
-title([sessionID],'Interpreter', 'none')
-end
-    
