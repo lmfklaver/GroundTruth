@@ -16,8 +16,9 @@ for ii= 1:length(cco_indexvector.matches)
     end
 end
 
-for ii = 1:5255  %length(cco_indexvector.om)
-    if cco_indexvector.om(ii)-opts.timWinWavespec < 0 || cco_indexvector.om(ii)-BLtimVec < 0 
+for ii = 1:length(cco_indexvector.om) %5255
+    if cco_indexvector.om(ii)-opts.timWinWavespec < 0 || cco_indexvector.om(ii)-BLtimVec < 0 ... 
+            || cco_indexvector.om(ii)+ opts.timWinWavespec > length(lfp_extra.timestamps) || cco_indexvector.om(ii)+BLtimVec > length(lfp_extra.timestamps)
         continue
     else
         % Extracellular LFP centered on juxtaspike

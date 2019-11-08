@@ -40,9 +40,9 @@ opts.freqRange = [1 500];
 opts.numFreqs = 100;%ops.freqRange(end)-ops.freqRange(1);
 opts.bltimvec = 10*501-1+250;
 
-basepath = 'E:\Data\GroundTruth\';
-pathJuxtaExtra.JuxtaPath = 'E:\Data\GroundTruth\juxta_cell_output\';
-pathJuxtaExtra.ExtraPath = 'E:\Data\GroundTruth\juxta_cell_output\';
+basepath = 'D:\Data\GroundTruth\';
+pathJuxtaExtra.JuxtaPath = 'D:\Data\GroundTruth\juxta_cell_output\';
+pathJuxtaExtra.ExtraPath = 'D:\Data\GroundTruth\juxta_cell_output\';
 
 params.Probe0idx = [13 20 28 5 9 30 3 24 31 2 4 32 1 29 23 10 8 22 11 25 21 12 7 19 14 26 18 15 6 17 16 27 0];
 params.Probeflip = flip(params.Probe0idx);
