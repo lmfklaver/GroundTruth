@@ -30,13 +30,13 @@ for iSess = 1%1:length(sessions)
     % Juxta and ExtraPath are now hardcoded: softcode this for future!!
     % (same in gt_LFP_hfArtifacts)
     
-    pathInfo.JuxtaPath  = 'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_110856_GOOD_JC'; 
-    pathInfo.ExtraPath  = 'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
+    pathInfo.JuxtaPath  = 'D:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_110856_GOOD_JC'; 
+    pathInfo.ExtraPath  = 'D:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
     
     %pathInfo.JuxtaPath = 'E:\Data\GroundTruth\juxta_cell_output\m15_190315_152315_cell1';
     %pathInfo.ExtraPath = 'E:\Data\GroundTruth\juxta_cell_output\m15_190315_152315_cell1';
     
-    pathInfo.RecPath    = ['E:\Data\GroundTruth\', sessions{iSess}];
+    pathInfo.RecPath    = ['D:\Data\GroundTruth\', sessions{iSess}];
     cd(pathInfo.RecPath);
     
     selecSession = sessions{iSess};
@@ -77,8 +77,8 @@ for iSess = 1%1:length(sessions)
     % the indexing in spikesJCEC correctly formatted
     
     % gt_LoadJuxtaCorrExtra is made for James data - try KS1 first
-    [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtraOld(pathInfo,params);
-    %[highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtra(pathInfo,params) 
+    %[highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtraOld(pathInfo,params);
+    [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtra(pathInfo,params) 
 
     % get matches, commissions , omissions
     [cco_timevector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, highestChannelCorr, lfp_extra, lfp_juxta, ops);

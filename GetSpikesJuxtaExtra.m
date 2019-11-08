@@ -71,22 +71,22 @@ JuxtaSpikesTimes    = JuxtaSpikes.times{1};
  ExtraSpikesTimes    = ExtraSpikes.times;
 
 % ExtraSpikesTimes =round(ExtraSpikesTemp{ExtraCorr}.times,30000, 24);
- %%%%%% FOR TESTING %%%%%%%
-JuxtaPath = 'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_110856_GOOD_JC';
-ExtraPath = 'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
- %Define JuxtaSpikes with buzcode function get spikes
-cd(JuxtaPath)
-JuxtaSpikesComp         = bz_GetSpikes('noPrompts' , true);
-JuxtaCorrComp          = find(JuxtaSpikesComp.shankID == 2);
-JuxtaSpikesTimesComp    = JuxtaSpikesComp.times{JuxtaCorrComp};
-
-%JuxtaSpikesTimes       = resample(JuxtaSpikes.times(1, JuxtaCorr),30000,24);
-
-%Define extra spikes with buz code function
-cd(ExtraPath);
-ExtraSpikesComp         = bz_GetSpikes('noPrompts' , true);
-ExtraCorrComp           = find(ExtraSpikesComp.shankID == 1);
-ExtraSpikesTimesComp    = ExtraSpikesComp.times{ExtraCorrComp};
+%  %%%%%% FOR TESTING %%%%%%%
+% JuxtaPath = 'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_110856_GOOD_JC';
+% ExtraPath = 'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
+%  %Define JuxtaSpikes with buzcode function get spikes
+% cd(JuxtaPath)
+% JuxtaSpikesComp         = bz_GetSpikes('noPrompts' , true);
+% JuxtaCorrComp          = find(JuxtaSpikesComp.shankID == 2);
+% JuxtaSpikesTimesComp    = JuxtaSpikesComp.times{JuxtaCorrComp};
+% 
+% %JuxtaSpikesTimes       = resample(JuxtaSpikes.times(1, JuxtaCorr),30000,24);
+% 
+% %Define extra spikes with buz code function
+% cd(ExtraPath);
+% ExtraSpikesComp         = bz_GetSpikes('noPrompts' , true);
+% ExtraCorrComp           = find(ExtraSpikesComp.shankID == 1);
+% ExtraSpikesTimesComp    = ExtraSpikesComp.times{ExtraCorrComp};
 
 %% Make 1 struct of JC and EC
 
