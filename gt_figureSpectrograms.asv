@@ -34,8 +34,8 @@ for iSess = 1:length(sessions)
     [cco_timevector, cco_indexvector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, highestChannelCorr, lfp_extra,lfp_juxta, opts, sessions, iSess);
     %
     [~, ~, normdata] = gt_calcSpectrograms(pathInfo,lfp_extra, cco_indexvector,opts);
-    %ERROR in ^^^ GetNormWaveSpec
-    %             GetWaveSpecCCO (line 14 error) when calling on WaveSpec function
+    %ERROR in ^^^ GetNormWaveSpec --> GetWaveSpecCCO (line 14 when calling
+    %on WaveSpec function)
     %
     gt_plotSpectrograms(opts,normdata)
 end

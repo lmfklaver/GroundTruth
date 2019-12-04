@@ -83,9 +83,9 @@ fprintf('Done with getting cco_duration and cco_data, ready to calculate wavespe
 %% Loop wavespec over the columns(spikes) for each cell
 freqRange   = opts.freqRange;
 numFreqs    = opts.numFreqs;
-
+normdata.match = [];
 % to run through each event set and run wavespec on it(assuming each collumn is a time stamp and each row is one of 501 time/data stamps)
-normdata.match = getNormWavespecCCO(lfp_matches, lfp_matches_bl,freqRange,numFreqs);
+normdata.match(1,:) = getNormWavespecCCO(lfp_matches, lfp_matches_bl,freqRange,numFreqs);
 disp('leggo')
 
 % omission error
