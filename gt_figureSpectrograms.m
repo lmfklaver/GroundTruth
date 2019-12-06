@@ -3,7 +3,7 @@
 % Lianne's adaptation of Reagan's script
 % Reagan edits on 11/13/19
 %%
-for iSess = 1:length(sessions)
+for iSess = 5%1:length(sessions)
   %Define Recording Session Specific Pathways
             
         switch (opts.juxta_sorter)

@@ -74,10 +74,10 @@ lfp_com_error.data          = cco_data.commission;
 lfp_com_error_bl.timestamps = cco_duration.commissionBL;
 lfp_com_error_bl.data       = cco_data.commissionBL;
 
-clear cco_duration cco_data
-
-cco_duration = 1;
-cco_data = 1;
+% clear cco_duration cco_data
+% 
+% cco_duration = 1;
+% cco_data = 1;
 
 fprintf('Done with getting cco_duration and cco_data, ready to calculate wavespec\n')
 %% Loop wavespec over the columns(spikes) for each cell
@@ -85,7 +85,7 @@ freqRange   = opts.freqRange;
 numFreqs    = opts.numFreqs;
 
 % to run through each event set and run wavespec on it(assuming each collumn is a time stamp and each row is one of 501 time/data stamps)
-normdata.match = getNormWavespecCCO(lfp_matches, lfp_matches_bl,freqRange,numFreqs);
+[normdata.match] = getNormWavespecCCO(lfp_matches, lfp_matches_bl,freqRange,numFreqs);
 disp('leggo')
 
 % omission error
