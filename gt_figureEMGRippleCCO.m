@@ -11,16 +11,6 @@
 %%
 sessions = {'m15_190315_152315'};
 
-%     All Sessions
-%     {'m14_190326_155432',...
-%     'm14_190326_160710_cell1',...
-%     'm15_190315_142052_cell1',...
-%     'm15_190315_145422',...
-%     'm15_190315_150831_cell1',...
-%     'm15_190315_152315_cell1',...
-%     'm52_190731_145204_cell3'};
-
-areas = {'hpc','hpc','cx','hpc','hpc','hpc','th'};
 %%
 plotRasters = 0;
 
@@ -30,13 +20,13 @@ for iSess = 1%1:length(sessions)
     % Juxta and ExtraPath are now hardcoded: softcode this for future!!
     % (same in gt_LFP_hfArtifacts)
     
-    pathInfo.JuxtaPath  = 'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_110856_GOOD_JC'; 
-    pathInfo.ExtraPath  = 'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
+    pathInfo.JuxtaPath  = 'D:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_110856_GOOD_JC'; 
+    pathInfo.ExtraPath  = 'D:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
     
     %pathInfo.JuxtaPath = 'E:\Data\GroundTruth\juxta_cell_output\m15_190315_152315_cell1';
     %pathInfo.ExtraPath = 'E:\Data\GroundTruth\juxta_cell_output\m15_190315_152315_cell1';
     
-    pathInfo.RecPath    = ['E:\Data\GroundTruth\', sessions{iSess}];
+    pathInfo.RecPath    = ['D:\Data\GroundTruth\', sessions{iSess}];
     cd(pathInfo.RecPath);
     
     selecSession = sessions{iSess};
@@ -44,44 +34,25 @@ for iSess = 1%1:length(sessions)
 
     
     disp(['Currently evaluating session:' sessions{iSess}])
+   
+   %Define specific session params
     sessionInfo = bz_getSessionInfo(cd);
-    %sessionInfo.region = areas{iSess}
-    
+      %sessionInfo.region = areas{iSess}
     params.nChans       = sessionInfo.nChannels;
     params.sampFreq     = sessionInfo.rates.wideband;
-    params.Probe0idx    = sessionInfo.channels;
-    params.juxtachan    = 1;
-    params.Probe0idx    = [13 20 28 5 9 30 3 24 31 2 4 32 1 29 23 10 8 22 11 25 21 12 7 19 14 26 18 15 6 17 16 27 0];
-    params.Probe        = params.Probe0idx +1;
-    params.Probeflip    = flip(params.Probe0idx);
-    params.Probeflip(1) = [];
-    
-    %% Define options -CHECK WHICH WE NEED
-    
-    ops.rangeSpkBin = .002; %binsize for extra occurring before or after juxta
-    ops.timWinWavespec = 250; %ms
-    ops.doSave = 0;
-    ops.freqRange = [1 500];
-    ops.numFreqs = 100;%ops.freqRange(end)-ops.freqRange(1);
-    ops.bltimvec = 10*501-1+250;
-    
-    ops.intervals           = [0 Inf]; %in sec - change to desired time (find via neuroscope) multiple intervals can be assigned to multiple rows
-    ops.downsamplefactor    = 1;
-    ops.intervals           = [0 Inf];%[480 Inf]; %sec
-    ops.hpfreq              = 450;
-    
-    ops.doPlots             = 0;
+    %params.Probe0idx    = sessionInfo.channels; listed in startup code
+   
     
     %% Get Juxta and or Extra spikes
     % gt_LoadJuxtaCorrExtraOld does the thing with Kilosort1 output (so with
     % the indexing in spikesJCEC correctly formatted
     
     % gt_LoadJuxtaCorrExtra is made for James data - try KS1 first
-    [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtraOld(pathInfo,params);
-    %[highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtra(pathInfo,params) 
+    %[highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtraOld(pathInfo,params);
+    [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtra(pathInfo,params) 
 
     % get matches, commissions , omissions
-    [cco_timevector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, highestChannelCorr, lfp_extra, lfp_juxta, ops);
+    [cco_timevector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, highestChannelCorr, lfp_extra, lfp_juxta, opts);
 
      %% Get LFP data for sanity checks! I suggest checking them with raw data. 
     lfp         = bz_GetLFP('all','basename', selecSession); %

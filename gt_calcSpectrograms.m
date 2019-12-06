@@ -6,7 +6,7 @@ BLtimVec = opts.bltimvec;
 
 for ii= 1:length(cco_indexvector.matches)
     % Extracellular LFP centered on juxtaspike
-    if cco_indexvector.matches(ii)-opts.timWinWavespec < 0 || cco_indexvector.matches(ii)-BLtimVec < 0
+    if cco_indexvector.matches(ii)-opts.timWinWavespec <= 0 || cco_indexvector.matches(ii)-BLtimVec <= 0
         continue
     else
         cco_duration.matches(:,ii) = lfp_extra.timestamps(cco_indexvector.matches(ii)-opts.timWinWavespec:cco_indexvector.matches(ii)+opts.timWinWavespec);
@@ -16,8 +16,9 @@ for ii= 1:length(cco_indexvector.matches)
     end
 end
 
-for ii = 1:5255  %length(cco_indexvector.om)
-    if cco_indexvector.om(ii)-opts.timWinWavespec < 0 || cco_indexvector.om(ii)-BLtimVec < 0 
+for ii = 1:length(cco_indexvector.om) 
+    if cco_indexvector.om(ii)-opts.timWinWavespec <= 0 || cco_indexvector.om(ii)-BLtimVec <= 0 ... 
+            || cco_indexvector.om(ii)+ opts.timWinWavespec > length(lfp_extra.timestamps) || cco_indexvector.om(ii)+BLtimVec > length(lfp_extra.timestamps)
         continue
     else
         % Extracellular LFP centered on juxtaspike
@@ -29,7 +30,7 @@ for ii = 1:5255  %length(cco_indexvector.om)
 end
 
 for ii = 1:length(cco_indexvector.com)
-    if cco_indexvector.com(ii)-opts.timWinWavespec < 0 || cco_indexvector.com(ii)-BLtimVec < 0
+    if cco_indexvector.com(ii)-opts.timWinWavespec <= 0 || cco_indexvector.com(ii)-BLtimVec <= 0
         continue
     else
         % Extracellular LFP centered on extraspike
@@ -57,7 +58,7 @@ clear lfp_extra
 
 %matches
 lfp_matches.timestamps = cco_duration.matches;
-lfp_matches.data       = cco_data.match;
+lfp_matches.data       = cco_data.matches;
 lfp_matches_bl.timestamps = cco_duration.matchBL;
 lfp_matches_bl.data       = cco_data.matchBL;
 
@@ -73,10 +74,10 @@ lfp_com_error.data          = cco_data.commission;
 lfp_com_error_bl.timestamps = cco_duration.commissionBL;
 lfp_com_error_bl.data       = cco_data.commissionBL;
 
-clear cco_duration cco_data
-
-cco_duration = 1;
-cco_data = 1;
+% clear cco_duration cco_data
+% 
+% cco_duration = 1;
+% cco_data = 1;
 
 fprintf('Done with getting cco_duration and cco_data, ready to calculate wavespec\n')
 %% Loop wavespec over the columns(spikes) for each cell
@@ -99,20 +100,5 @@ if opts.doSave
     save normwavespecdata normdata
 end
 
-
-    function [normdata] = getNormWavespecCCO(lfp, lfp_bl,freqRange,numFreqs)
-        wavespec_BL     = getWaveSpecCCO(lfp_bl,freqRange,numFreqs);%getWaveSpecCCO
-        wavespec_avg_BL = mean(cat(3,wavespec_BL.data),3);
-        clear lfp_bl wavespec_BL
-        %normalizing
-        avgFreq         = mean(mean(wavespec_avg_BL,3));
-        clear wavespec_avg_BL
-        normMat         = repmat(avgFreq,501,1);
-        wavespec        = getWaveSpecCCO(lfp,freqRange, numFreqs);%getWaveSpecCCO
-        clear lfp
-        wavespec_avg    = mean(cat(3,wavespec.data),3); %concatenate all the matches in the struct, get the average over those matches
-        clear wavespec
-        normdata  = wavespec_avg./normMat;
-    end
 
 end
