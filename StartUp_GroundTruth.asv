@@ -82,7 +82,7 @@
    
 %% Define Generic Options   
     opts.rangeSpkBin        = .001; %binsize for extra occurring before or after juxta % maybe a bit wider for james' irc2 output?
-    opts.timWinWavespec     = 250; %ms
+    opts.timWinWavespec     = .250; %
     opts.doSave             = 0;
     opts.freqRange          = [1 500];
     opts.numFreqs           = 100;%ops.freqRange(end)-ops.freqRange(1);
