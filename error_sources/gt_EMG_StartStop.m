@@ -4,12 +4,14 @@ function [rest_start_stop] = gt_EMG_StartStop(EMG_info,params)
 %   GetJuxtaSpikes -- some juxta spike function
 %   GetExtraSpikes -- some extra spike function
 %   
-%Code Start Date: October 11 2019
-%Lianne adaptations Oct 16 (made this functions to only get the values we
-%want out.
-%% Get Juxta Spikes (outside this function)
-%% Get EMG movement timestamps and rest timestamps (outside this function)
-%% Highest Correlation channel(outside this function)
+%Code Start Date:Reagan October 11 2019
+%Lianne adaptations Oct 16 (only get the values we want).
+
+% Get Juxta Spikes (outside this function)
+% Get EMG movement timestamps and rest timestamps (outside this function)
+% Highest Correlation channel(outside this function)
+
+
 %% Get Correlations, Commissions, and Omissions with no muscle movement (rest)
    % THOUGHT for future: EMG gives correlations, so there are 2 less
    % datapoints than on the LFP (may not matter)
