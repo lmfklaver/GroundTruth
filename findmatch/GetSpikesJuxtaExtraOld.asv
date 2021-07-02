@@ -1,9 +1,9 @@
 function [spikesJCEC, JuxtaSpikesTimes, ExtraSpikesTimes] = GetSpikesJuxtaExtraOld(basepath)
 
-JCshank = 10;
+
 
 JuxtaPath = basepath;%'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_110856_GOOD_JC';
-ExtraPath = fullfile(basepath,'kilosort2\');%'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
+ExtraPath = fullfile(basepath,'ks2\');%'E:\Data\GroundTruth\m15_190315_152315\Kilosort_2019-08-06_105959_GOOD_EC';
 
 basename = bz_BasenameFromBasepath(basepath);
 
@@ -11,9 +11,9 @@ basename = bz_BasenameFromBasepath(basepath);
 cd(JuxtaPath)
 %JuxtaSpikes         = bz_GetSpikes('noPrompts' , true);
 
-load([basename '.juxtaSpikes.mat'])
-JuxtaSpikes         = juxtaSpikes;
-JuxtaCorr          = JuxtaSpikes.shankID == JCshank;
+load([basename '15_190315_142052_cell1.juxtaSpikes.mat')
+JuxtaSpikes         = justaSpikes.mat'
+JuxtaCorr          = JuxtaSpikes.shankID == 2;
 JuxtaSpikesTimes    = JuxtaSpikes.times{JuxtaCorr};
 
 %JuxtaSpikesTimes       = resample(JuxtaSpikes.times(1, JuxtaCorr),30000,24);
@@ -38,32 +38,18 @@ spikesJCEC.cluID = ExtraSpikes.cluID(ECind);
 
 spikesJCEC.rawWaveform = ExtraSpikes.rawWaveform(ECind);
 spikesJCEC.maxWaveformCh = ExtraSpikes.maxWaveformCh(ECind);
-% spikesJCEC.region = ExtraSpikes.region(ECind);
+spikesJCEC.region = ExtraSpikes.region(ECind);
 spikesJCEC.sessionName = ExtraSpikes.sessionName;
 spikesJCEC.numcells = ExtraSpikes.numcells;
 spikesJCEC.spindices = ExtraSpikes.spindices;
 
-JCind = JuxtaSpikes.shankID == JCshank;
+JCind = JuxtaSpikes.shankID == 2;
 spikesJCEC.UID(end+1) = JuxtaSpikes.UID(JCind);
 spikesJCEC.times(end+1) = JuxtaSpikes.times(JCind);
 spikesJCEC.shankID(end+1) = JuxtaSpikes.shankID(JCind);
-
-if isfield(JuxtaSpikes,'cluID')
-    spikesJCEC.cluID(end+1) = JuxtaSpikes.cluID(JCind);
-else
-    spikesJCEC.cluID(end+1) = JuxtaSpikes.UID(JCind);
-end
-
+spikesJCEC.cluID(end+1) = JuxtaSpikes.cluID(JCind);
 spikesJCEC.rawWaveform(end+1) = JuxtaSpikes.rawWaveform(JCind);
-
-if isfield(JuxtaSpikes,'maxWaveformCh')
-    
 spikesJCEC.maxWaveformCh(end+1) = JuxtaSpikes.maxWaveformCh(JCind);
-
-else
-    spikesJCEC.maxWaveformCh(end+1) = 0;
-end
-
-% spikesJCEC.region(end+1) = JuxtaSpikes.region(JCind);
+spikesJCEC.region(end+1) = JuxtaSpikes.region(JCind);
 
 end

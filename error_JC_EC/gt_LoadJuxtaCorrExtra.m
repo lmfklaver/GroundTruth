@@ -1,7 +1,7 @@
 function [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtra(pathInfo,params,opts) 
 %% Load in General Info on LFP & define some variables
 
-[spikesJCEC, JuxtaSpikesTimes, ExtraSpikesTimes] = GetSpikesJuxtaExtra(pathInfo,params,opts);
+[spikesJCEC, JuxtaSpikesTimes, ExtraSpikesTimes] = GetSpikesJuxtaExtra(pathInfo);
 % Calculate correlation over spikeTimes
 % See if you can specify that it should only calculate correlations with
 % Juxta? Now over whole matrix

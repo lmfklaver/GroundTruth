@@ -25,6 +25,10 @@ sessions =  {'m14_190326_155432',...
 areas = {'hpc','hpc','cx','hpc','hpc','hpc','th'};
 
 
+%%%%TABLE LAYOUT 
+
+% session        area         interval
+
 %ommit SNR bad
 %'m41_190621_125124_cell1',...
 %'m52_190731_145204_cell2',...
@@ -79,7 +83,7 @@ for iSess = 1:length(sessions)
 %             params.chansinorder = [1 2 3 4 0];
 %         end
         
-        [juxtaSpikes] = GetJuxtaSpikes(basepath, 'intervals', intervals,'juxtachan',0, ...
+        [juxtaSpikes] = GetJuxtaSpikes(basepath, 'intervals', [0 Inf],'juxtachan',0, ...
             'templateMatch',true,'filter','butterworth','saveMat',true);
         % intervals will be read from excel file 
         

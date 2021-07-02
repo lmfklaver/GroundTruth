@@ -23,7 +23,7 @@ function [juxtaSpikes] = GetJuxtaSpikes(basepath,varargin)
 %   'forceOverwrite' - default:false. Overwrites previously generated
 %                      matfiles, use with caution
 %   'SNRThr'        - Default = 7;
-%   'tempmatchThr' -  dEfault = 0.8
+%   'template
 %
 %   OUTPUTS
 %   juxtaSpikes     - struct
@@ -94,7 +94,7 @@ templateMatch   = p.Results.templateMatch;
 hpfilter        = p.Results.filter;
 hpFreq          = p.Results.hpfreq;
 forceOverwrite  = p.Results.forceOverwrite;
-tempmatchThr   = p.Results.tempmatchThr;
+tempmatchtThr   = p.Results.tempmatchThr;
 SNRThr          = p.Results.SNRThr;
 
 
@@ -102,8 +102,8 @@ cd(basepath)
 
 %% Check this:
 % These are now hardcoded, unsure if we need to do something with that
-buttOrder = 1; % butterworth
-firOrder = 256; %fir1
+buttOrder = 1;
+firOrder = 256;
 
 %% Load in data juxta
 
@@ -126,13 +126,10 @@ if strcmpi(hpfilter, 'butterworth')
     %  filter 1: butterworth
     [b,a] = butter(buttOrder,hpFreq/(sampFreq/2),'high'); % Butterworth filter of order
     filtJuxta = zscore(filter(b,a,dJuxtadata)); % Will be the filtered signal
-   
     
 elseif strcmpi(hpfilter, 'highpass')
     % filter 2: built-in highpass
     filtJuxta = highpass(dJuxtadata,hpFreq,sampFreq);
-    %maybe zscore this too
-    
     
 elseif strcmpi(hpfilter, 'fir1')
     % filter 3: filtfilt
@@ -150,8 +147,6 @@ end
 % Choose amount of samples around threshold crossing to pull spike waveform
 % from
 tIx = -40:55; % hardcoded now, i don't think this needs to be changed
-% maybe fir1 first? then butterworth 1st order over spike segment
-
 
 % Define a threshold (NEEDS WORK)
 SNRthrFactor = SNRThr; % figure this one out per cell
@@ -173,26 +168,17 @@ sIxAll = repmat(tIx,[length(sIx) 1])+repmat(sIx(:),[1 length(tIx)]);
 spk = dJuxtadata(sIxAll);
 
 rawWaveform = {mean(spk)};
-
-% filtSpk = filteredData(sIxAll);
-% filtWaveform = {mean(filtSpk)}; %maybe with a butterworth filter after a fir1 former
-
-% figure, plot(filtSpk')
-
-
 %% Template Matching section
 
 if templateMatch
     C = zscore(double(rawWaveform{1}))*zscore(double(spk)')/length(tIx);
-    badIx = find(C<tempmatchThr); % .7 or .8 
+    badIx = find(C<tempmatchtThr); %
     spk(badIx,:) = [];
     ts{1}(badIx,:) = [];
     times{1}(badIx,:) = [];
     sIx(badIx) = [];
 end
 
-% sIxAll = repmat(tIx,[length(sIx) 1])+repmat(sIx(:),[1 length(tIx)]);
-% figure, plot(filtSpk(sIx)')
 
 %% Make struct
 % add necessary fields for spike struct for it to be comptible with buzcode
@@ -202,7 +188,6 @@ juxtaSpikes.times       = times;
 juxtaSpikes.ts          = ts;
 juxtaSpikes.spk         = spk;
 juxtaSpikes.rawWaveform = rawWaveform;
-% juxtaSpikes.filtWaveform = filtWaveform;
 juxtaSpikes.UID         = 0; %unique identifier for each neuron in a recording
 juxtaSpikes.shankID     = 10; % shank ID that each neuron was recorded on
 juxtaSpikes.maxWaveFormCh = 0 ; % 0-based channel for Juxta
