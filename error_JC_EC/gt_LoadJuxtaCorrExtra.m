@@ -1,4 +1,4 @@
-function [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes] = gt_LoadJuxtaCorrExtra(pathInfo,params,opts) 
+function [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes, bestCluster] = gt_LoadJuxtaCorrExtra(pathInfo,params,opts) 
 %% Load in General Info on LFP & define some variables
 
 [spikesJCEC, JuxtaSpikesTimes, ExtraSpikesTimes] = GetSpikesJuxtaExtra(pathInfo,params,opts);
@@ -16,10 +16,14 @@ maxCC = max(max(checkCorrs)); % gives you EC cluster with highest correlation to
 % by looking at all the times (101) of the ccg matrix for all different clusters, you can get the counts for the other EC correlation occurences out
 highestChannelCorr = spikesJCEC.maxWaveformCh(c); % channel on which waveform is highest
 
+bestCluster = c;
+
 %cd(pathInfo.Recpath)
 cd(pathInfo.RecPath)
 
 lfp_juxta = bz_GetLFP(0); % recorded juxta channel
 lfp_extra = bz_GetLFP(highestChannelCorr); % matching extracellular channel
+
+
 
 disp('done')

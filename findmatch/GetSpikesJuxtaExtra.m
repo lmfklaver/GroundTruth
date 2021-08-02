@@ -2,7 +2,14 @@ function [spikesJCEC, JuxtaSpikesTimes, ExtraSpikesTimes] = GetSpikesJuxtaExtra(
 %%%%%% WORK IN PROGRESS,LOADING IN JAMES' SPIKSE %%%%%%%%
 % Better to only overwrite times + cluID? 
 %Hard code for mouse 15
-[JuxtaSpikes, JCind] = LoadJuxtaSpikes(pathInfo,params,opts);
+% [JuxtaSpikes, JCind] = LoadJuxtaSpikes(pathInfo,params,opts); commented
+% out - Erik 6_7_21
+
+load([opts.basename, '.juxtaSpikes.mat'], 'juxtaSpikes');
+JuxtaSpikes = juxtaSpikes;
+shank2Find = juxtaSpikes.shankID;
+JCind = find(JuxtaSpikes.shankID == shank2Find);
+
 [ExtraSpikes, ECind] = LoadExtraSpikes(pathInfo,params,opts);
 
 cd(pathInfo.RecPath)
@@ -41,8 +48,9 @@ spikesJCEC.maxWaveformCh = ExtraSpikes.maxWaveformCh(ECind);
 spikesJCEC.times(end+1) = JuxtaSpikes.times(JCind);
 
 spikesJCEC.shankID(end+1)       = JuxtaSpikes.shankID(JCind);
-spikesJCEC.cluID(end+1)         = JuxtaSpikes.cluID(JCind);
+% spikesJCEC.cluID(end+1)         = JuxtaSpikes.cluID(JCind); %******you
+% commented this out temporarily, turn back on when juxta-clu is operational - Erik 6_8_21
 %spikesJCEC.rawWaveform(end+1)   = JuxtaSpikes.rawWaveform;
-spikesJCEC.maxWaveformCh(end+1) = JuxtaSpikes.maxWaveformCh(JCind);
+spikesJCEC.maxWaveformCh(end+1) = JuxtaSpikes.maxWaveFormCh(JCind); %was lowercase f in Form beforehand
 %spikesJCEC.region(end+1)        = JuxtaSpikes.region(JCind);
 end
