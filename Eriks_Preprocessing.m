@@ -37,7 +37,6 @@ session.spikeGroups; %
     extra_sorter        = 'EC_kilosort2';
     sessionLength       = 577; %in seconds
     
-%%
     params.Probe0idx    = [13 20 28 5 9 30 3 24 31 2 4 32 1 29 23 10 8 22 11 25 21 12 7 19 14 26 18 15 6 17 16 27 0];
     params.Probeflip    = flip(params.Probe0idx);
     params.Probeflip(1) = []; % rm juxta
@@ -212,12 +211,12 @@ slide = 20;
 kernel = pdf('Normal', -slide:slide+1, 0, 2);
 filtered_pos = filtfilt(kernel,1,position);
 % plot(filtered_output)
-%%
+%% plot the pos trail
 
 subplot(2,1,1)
-plot(position)
+plot(position) % plots raw position trace
 subplot(2,1,2)
-plot(filtered_pos)
+plot(filtered_pos) %plots filtered position trace
 
 %% define voltage bins
 voltSteps = 100;
@@ -239,9 +238,9 @@ end
 
 % lapEnd = find(filtered_pos <= max(filtered_pos) + 0.00015 && filtered_pos >= max(filtered_pos) - 0.00015);
 
-[posPeak,posPeakInx] = findpeaks(filtered_pos);
+[posPeak,posPeakInx] = findpeaks(filtered_pos); % gets the lap start/end by looking at the peaks of the filtered position trace
 
-[threshPosPeak] = find(posPeak >= 1.17);
+[threshPosPeak] = find(posPeak >= 1.17); % have to pass a threshold since "find peaks" is a little over-zealous with peak detection
 
 threshPeakInx = posPeakInx(1,threshPosPeak);
 threshPeakVal = filtered_pos(1,threshPeakInx);
@@ -251,8 +250,8 @@ threshPeakVal = filtered_pos(1,threshPeakInx);
 
 hold on;
 subplot(2,1,2);
-scatter(threshPeakInx,threshPeakVal);
-% hold off;
+scatter(threshPeakInx,threshPeakVal); % puts the orange markers on the filtered pos graph
+hold off;
 lap.end = analogin.ts(threshPeakInx);
 lap.end(1,end + 1) = analogin.ts(1,end);
 % analogStart(1,1) = analogin.ts(1,1);
@@ -305,7 +304,7 @@ binEdges = binStart;
 binEdges(1,end+1) = binEnd(1,end);
 
 jxtSpkLapPosMat = zeros(lap.num,100);
-aveISIs = zeros(lap.num,100);
+aveISIs = zeros(lap.num,100); % used for isi later, can ignore for now
 
 %% making the juxta plots
 for i = 1:lap.num
@@ -343,18 +342,25 @@ for i = 1:lap.num
 end
 
 % JSC_Lap = 
-imagesc(jxtSpkLapPosMat);
+subplot(2,1,1);
+
+imagesc(jxtSpkLapPosMat); % plots juxta spikes per position bin per lap
 colorbar
 title('Juxta Spike Count per Position per Lap');
 xlabel('Position Bins (AU 0 - 100)') 
 ylabel('Laps') 
 
-% sumJxtSpk = 
-sum(jxtSpkLapPosMat);
+hold on
+
+subplot(2,1,2);
+
+sumJxtSpk = sum(jxtSpkLapPosMat); % plots juxta spikes per position bin per session
 JSC_Sum = imagesc(sumJxtSpk);
 title('Juxta Spike Total Count per Position');
 xlabel('Position Bins (AU 0 - 100)')
 set(gcf,'Position', [100 100 540 100]);
+
+hold off
 %% graphing ISI
 
 imagesc(aveISIs);
@@ -366,8 +372,6 @@ ylabel('Laps')
 % notes for 6_25_21
 % ironcially, you need an inverse of the ISI to detect burstiness
 % also, try making your outputs structs rather than new named vars
-% also, also, remember that there are set theory functions in matlab that
-% may help you organize info in the future
 
 %% making the PlaceField plots
 
@@ -382,7 +386,7 @@ ylabel('Cells')
 [~,placeFieldSort] = max(extSpkLapPosMat,[],2);
 [~,placeFieldSort] = sortrows(placeFieldSort);
 
-imagesc(extSpkLapPosMat(placeFieldSort,:))
+imagesc(extSpkLapPosMat(placeFieldSort,:)) % plots the place field for the silicon probe data
 colorbar
 title('Si PlaceField');
 xlabel('Position Bins (AU 0 - 100)') 
@@ -469,9 +473,7 @@ iterDiffCell{1} = iterDiff;
 iterDiffRev = setdiff(juxtaSpikes.tsReserve{1}, juxtaSpikes.ts{1}); %iter vs normal
 iterDiffRevCell{1} = iterDiffRev;
 
-
 % EA_MakeClu(JuxtaSpikesTimes,basename,spikes);
-
 
 % EA_MakeClu(juxtaSpikes.timesReserve{1},[basename , '_Iter'],spikes);
 

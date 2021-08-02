@@ -14,8 +14,8 @@
 % [NUM,TXT,RAW]=XLSREAD(FILE,RANGE)
 %   sessions = {'basename_1' ... 'basename_n'};
 
-sessions =  {'m15_190315_145422'};
-
+sessions =  {'m14_190326_160710_cell1'};
+% sessions =  {'m15_190315_145422'};
 areas = {'hpc'};
 
 

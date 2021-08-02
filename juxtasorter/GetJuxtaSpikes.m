@@ -139,7 +139,7 @@ end
 yy = snr(juxtadata.times,filtJuxta);
 
 %% diagnostic section to check out the difference between the filters
-compareFilters = 1; %keeping this one for now
+compareFilters = 0; %keeping this one for now
 if compareFilters
 filCompInt = [0, 1000000];
 EA_JuxtaFilterCompare(dJuxtadata,sampFreq,hpFreq,firOrder,buttOrder,filCompInt)
