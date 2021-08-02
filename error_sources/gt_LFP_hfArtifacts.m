@@ -1,7 +1,7 @@
 %% Script with all the items to get the raw traces figure for the SfN Poster
 
-addpath(genpath('C:\Users\lklaver\Documents\Github\GroundTruth'))
-addpath(genpath('C:\Users\lklaver\Documents\GitHub\buzcode'))
+% addpath(genpath('C:\Users\lklaver\Documents\Github\GroundTruth'))
+% addpath(genpath('C:\Users\lklaver\Documents\GitHub\buzcode'))
 
 % Dependencies
 %   JuxtaSorter() ... gives juxta spikes

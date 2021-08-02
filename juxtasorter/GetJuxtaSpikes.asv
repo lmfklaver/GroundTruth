@@ -135,11 +135,8 @@ elseif strcmpi(hpfilter, 'fir1')
     [b,a] = fir1(firOrder,hpFreq/(sampFreq/2),'high');
     filtJuxta = zscore(filtfilt(b,a,dJuxtadata));
 end
-
-yy = snr(juxtadata.times,filtJuxta);
-
 %% diagnostic section to check out the difference between the filters
-compareFilters = 1; %keeping this one for now
+compareFilters = 0; %keeping this one for now
 if compareFilters
 filCompInt = [0, 1000000];
 EA_JuxtaFilterCompare(dJuxtadata,sampFreq,hpFreq,firOrder,buttOrder,filCompInt)
@@ -216,7 +213,7 @@ end
 
 fir1AltTemp = 0;
 if fir1AltTemp == 1
-%     fir1times
+    fir1times
     
     
 %     times = fir1times;
@@ -249,7 +246,7 @@ end
 % and scan the original spk group (spkReserve) while keeping the same
 % thresholds
 
-numIters = 3;
+numIters = 2;
 
 if numIters >= 1
     templateIter = 1;
@@ -328,9 +325,6 @@ juxtaSpikes.spkReserve  = spkReserve;
 juxtaSpikes.tsReserve   = tsReserve;
 juxtaSpikes.timesReserve= timesReserve;
 juxtaSpikes.sIxReserve  = sIxReserve;
-
-juxtaSpikes.allIters    = allIters;
-juxtaSpikes.finalIter   = finalIter;
 %% Plot
 % % This can probably go
 

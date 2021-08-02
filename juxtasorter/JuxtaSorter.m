@@ -5,8 +5,8 @@
 % Relies on functions in 
 % Buzcode, TSToolbox, Groundtruth Github repo
 
-addpath(genpath('E:\Dropbox\MATLAB (1)\AdrienToolBox\'))%TStoolbox
-addpath(genpath('C:\Users\lklaver\Github\GroundTruth\'))
+% addpath(genpath('E:\Dropbox\MATLAB (1)\AdrienToolBox\'))%TStoolbox
+% addpath(genpath('C:\Users\lklaver\Github\GroundTruth\'))
 
 %GTSessionsInfo
 
@@ -14,15 +14,9 @@ addpath(genpath('C:\Users\lklaver\Github\GroundTruth\'))
 % [NUM,TXT,RAW]=XLSREAD(FILE,RANGE)
 %   sessions = {'basename_1' ... 'basename_n'};
 
-sessions =  {'m14_190326_155432',...
-    'm14_190326_160710_cell1',...
-    'm15_190315_142052_cell1',...
-    'm15_190315_145422',...
-    'm15_190315_150831_cell1',...
-    'm15_190315_152315_cell1',...
-    'm52_190731_145204_cell3'};
+sessions =  {'m15_190315_145422'};
 
-areas = {'hpc','hpc','cx','hpc','hpc','hpc','th'};
+areas = {'hpc'};
 
 
 %ommit SNR bad
@@ -47,7 +41,7 @@ areas = {'hpc','hpc','cx','hpc','hpc','hpc','th'};
 % ops.ccgBinSize = 0.0015;
 % ops.ccgDur = 0.1;
 
-myDataPath = 'D:\Data\GroundTruth\';
+myDataPath = 'D:\GroundTruth\';
 areaOfInterest = 'hpc';
 
 for iSess = 1:length(sessions)
@@ -80,7 +74,10 @@ for iSess = 1:length(sessions)
 %         end
         
         [juxtaSpikes] = GetJuxtaSpikes(basepath, 'intervals', intervals,'juxtachan',0, ...
-            'templateMatch',true,'filter','butterworth','saveMat',true);
+            'templateMatch',true,'filter','butterworth','saveMat',true,'forceOverwrite',true);
+%         remember that 7/14/21 you changed the default filter to fir1
+        
+        
         % intervals will be read from excel file 
         
         allJuxtas = juxtaSpikes.times;
@@ -98,8 +95,8 @@ if ops.doPlots
 end
 
 % PCA + Kmeans
-if kMeansWF
-    [IDX]=kMeansOnWF(spikes, params);
-end
+% if kMeansWF
+%     [IDX]=kMeansOnWF(spikes, params);
+% end
 
 

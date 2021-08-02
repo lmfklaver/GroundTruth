@@ -21,7 +21,9 @@ for iSpikeJuxta = 1:length(JuxtaSpikesTimes) %4
     %   Loop through spikes of the best correlated neuron
     matchCount = 0;
     selectedJuxtaSpike = JuxtaSpikesTimes(iSpikeJuxta);
-    
+% ******** EA-> Found the problem, it is looking at hightestChannelCorr
+% instead of the actual cluster of interest (ex, highestchann = 31 but the
+% actual cluster is cluster 10)
     for iSpikeExtra = 1:length(ExtraSpikesTimes{highestChannelCorr}) %8599
         selectedExtraSpike = ExtraSpikesTimes{highestChannelCorr}(iSpikeExtra);
         
