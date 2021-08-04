@@ -6,8 +6,9 @@ switch (opts.extra_sorter)
          ExtraSpikes = bz_GetSpikes;
           ECind = find(ExtraSpikes.shankID == 1);
     case 'EC_kilosort2'
-         cd(pathInfo.RecPath);  
-        
+         cd(pathInfo.ExtraPath);  %changed this from RecPath to ExtraPath -Erik 6_7_21
+          ExtraSpikes = bz_GetSpikes; %Added this - Erik 6_7_21
+          ECind = find(ExtraSpikes.shankID == 1); %Added this - Erik 6_7_21
     case 'EC_firings.mda'
          cd(pathInfo.RecPath);
          

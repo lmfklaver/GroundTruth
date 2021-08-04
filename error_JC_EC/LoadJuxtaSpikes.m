@@ -8,8 +8,9 @@ switch (opts.juxta_sorter)
              JCind = find(JuxtaSpikes.shankID == 2);
              
         case 'JC_juxtaSorter'
-             cd(pathInfo.RecPath);     
-             
+             cd(pathInfo.JuxtaPath);     
+             JuxtaSpikes = juxtaSpikes;             
+             JCind = find(JuxtaSpikes.shankID == 10);
              
         case 'JC_firings_true.mda'
              cd(pathInfo.RecPath); 
