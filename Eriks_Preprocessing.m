@@ -116,7 +116,7 @@ pathInfo.RecPath = ['D:\GroundTruth\', sessions{iSess}];
 
 [cco_timevector, cco_indexvector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, bestCluster, lfp_extra,lfp_juxta, opts, sessions, iSess); 
 
-[cco_timevector,cco_indexvector,numMatch_Error] = EA_Matches_Errors(JuxtaSpikesTimes,ExtraSpikesTimes,highestChannelCorr, bestCluster,opts);
+[cco_timevector2,cco_indexvector2,numMatch_Error] = EA_Matches_Errors(JuxtaSpikesTimes,ExtraSpikesTimes,highestChannelCorr, bestCluster,opts);
 
 % ********************
 % This is the end of the comission ommission data
@@ -489,6 +489,13 @@ finalIterNum = spikes.numcells + 2; %clu/res for final iteration
 finalIterCell{1} = juxtaSpikes.finalIter.ts;
 EA_MakeSingleCluster(basename,finalIterNum,finalIterCell,1);
 
+altJuxtaNum = spikes.numcells + 3; %clu/res for final iteration
+altJuxtaCell{1} = juxtaSpikes2.finalIter.ts;
+EA_MakeSingleCluster(basename,altJuxtaNum,altJuxtaCell,1);
+
+mergedJuxtaNum = spikes.numcells + 4; %clu/res for final iteration
+mergedJuxtaCell{1} = mergedJuxta;
+EA_MakeSingleCluster(basename,mergedJuxtaNum,mergedJuxtaCell,1);
 
 % % % iterDiffNum = spikes.numcells + 2; %clu/res for spikes in 0th temp but not first iteration
 % % % EA_MakeSingleCluster(basename,iterDiffNum,iterDiffCell,1);
@@ -501,6 +508,12 @@ EA_MakeSingleCluster(basename,finalIterNum,finalIterCell,1);
 % fir1Num = spikes.numcells + 4;
 % EA_MakeSingleCluster(basename,fir1Num,iterDiffRevCell,1);
 
+%% Point and Click Adventure
+
+% % % % load([basename '.jSpkTimes.mat']);
+
+% % % % EA_PointAndClickAdventure(jSpkTimes,basename)
+EA_PointAndClickAdventure(JuxtaSpikesTimes,basename)
 
 
 

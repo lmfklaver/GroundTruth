@@ -14,10 +14,10 @@
 % [NUM,TXT,RAW]=XLSREAD(FILE,RANGE)
 %   sessions = {'basename_1' ... 'basename_n'};
 
-sessions =  {'m14_190326_160710_cell1'};
-% sessions =  {'m15_190315_145422'};
+% sessions =  {'m14_190326_160710_cell1'};
+sessions =  {'m15_190315_145422'};
 areas = {'hpc'};
-
+proximThresh = 20;
 
 %ommit SNR bad
 %'m41_190621_125124_cell1',...
@@ -74,12 +74,41 @@ for iSess = 1:length(sessions)
 %         end
         
         [juxtaSpikes] = GetJuxtaSpikes(basepath, 'intervals', intervals,'juxtachan',0, ...
-            'templateMatch',true,'filter','butterworth','saveMat',true,'forceOverwrite',true);
+            'templateMatch',true,'filter','butterworth','saveMat',true,...
+            'forceOverwrite',true,'SNRThr',4, 'numIters',2);
 %         remember that 7/14/21 you changed the default filter to fir1
-        
-        
-        % intervals will be read from excel file 
-        
+% 8/3/21 - bout to commit some real nonsense plays with two GetJuxtaSpikes.
+% tyring to run two analyses with a high SNR run through and a low SNR run
+% through. Will do this by running the function twice and adding more
+% options to the parser. 
+        juxtaMerger = 1;
+        if juxtaMerger == 1
+            
+            [juxtaSpikes2] = GetJuxtaSpikes(basepath, 'intervals', intervals,'juxtachan',0, ...
+                'templateMatch',true,'filter','butterworth','saveMat',true,...
+                'forceOverwrite',true,'SNRThr',20, 'numIters',1);
+            
+            juxta1 = juxtaSpikes.finalIter.ts;
+            juxta2 = juxtaSpikes2.ts{1}; %this may be a source of confusion
+            dupTimeInt = 0.002;
+            [mergedJuxta] = EA_MergeJuxtaTimes(juxta1,juxta2,dupTimeInt);
+            juxtaSpikes.ts{1} = mergedJuxta;
+            
+            juxta1Times = juxtaSpikes.finalIter.times;
+            juxta2Times = juxtaSpikes2.times{1};
+            [mergedJuxtaTimes] = EA_MergeJuxtaTimes(juxta1Times,juxta2Times,dupTimeInt);
+            juxtaSpikes.times{1} = mergedJuxtaTimes;
+            
+%           checks for near duplicates
+            diffJuxtaSpikes = diff(juxtaSpikes.times{1});
+%             proximThresh = 20; % defined above
+            diffJuxtaSpkInx = find(diffJuxtaSpikes <= (proximThresh/SampFreq));
+            juxtaSpikes.times{1}(diffJuxtaSpkInx) = [];
+
+            % intervals will be read from excel file
+            basename = bz_BasenameFromBasepath(basepath);
+            save([basename, '.juxtaSpikes.mat'], 'juxtaSpikes')
+        end
         allJuxtas = juxtaSpikes.times;
 
     else
