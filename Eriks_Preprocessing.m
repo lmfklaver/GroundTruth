@@ -510,10 +510,16 @@ EA_MakeSingleCluster(basename,mergedJuxtaNum,mergedJuxtaCell,1);
 
 %% Point and Click Adventure
 
-% % % % load([basename '.jSpkTimes.mat']);
+% % % load('m15_190315_145422.jSpkTimes_08_26_2021.3.54.29.PM.mat');
+% loads in the edited juxta spike times. these will be in a variable called
+% jSpkTimes
 
 % % % % EA_PointAndClickAdventure(jSpkTimes,basename)
-EA_PointAndClickAdventure(JuxtaSpikesTimes,basename)
 
+pathway = ['D:\GroundTruth\' basename]; % pathway for save location 
+EA_PointAndClickAdventure(JuxtaSpikesTimes,basename,pathway) 
+
+% % % EA_PointAndClickAdventure(jSpkTimes,basename,pathway)
+% jSpkTimes will be the variable name for the edited spike times 
 
 
