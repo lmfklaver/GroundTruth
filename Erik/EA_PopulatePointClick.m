@@ -20,7 +20,13 @@ upWinLength =  round(lWinEdge*samplingFreq); %in indices. Time = 100 ms
 
 currDataInx = round(samplingFreq * currSpkTime);
 
-lowWinBound = juxtadata.times(currDataInx - lowWinLength); %need to have out of bound cases
+
+lowWindowInx = currDataInx - lowWinLength;
+if (lowWindowInx < 1)
+    lowWindowInx = 1;
+end
+
+lowWinBound = juxtadata.times(lowWindowInx); %need to have out of bound cases
 upWinBound = juxtadata.times(currDataInx + upWinLength); %why do you use 
 juxtaInx = find(JuxtaSpikesTimes>= lowWinBound & JuxtaSpikesTimes <= upWinBound);
 theseJuxtas = JuxtaSpikesTimes(juxtaInx);

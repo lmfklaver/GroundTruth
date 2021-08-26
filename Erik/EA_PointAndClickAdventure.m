@@ -1,4 +1,4 @@
-function EA_PointAndClickAdventure(JuxtaSpikesTimes,basename)
+function EA_PointAndClickAdventure(JuxtaSpikesTimes,basename,pathway)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -37,6 +37,7 @@ pop.rWinEdge    = 0.05;
 pop.lWinEdge    = 0.1;
 pop.basename    = basename;
 pop.lbl4        = lbl4;
+pop.pathway     = pathway;
 
 iSpikeInit = 1;
 pop.lbl4.Text = [num2str(iSpikeInit) '/' num2str(length(pop.jSpkTimes))];
