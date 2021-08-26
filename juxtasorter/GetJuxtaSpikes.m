@@ -79,8 +79,9 @@ addParameter(p,'templateMatch',true, @islogical);
 addParameter(p,'filter','butterworth',@isstr);
 addParameter(p,'hpfreq',1000,@isnumeric);
 addParameter(p,'tempmatchThr',0.8,@isnumeric);
-addParameter(p,'SNRThr',4,@isnumeric);% was 7 7/27/21
+addParameter(p,'SNRThr',7,@isnumeric);% was 7 7/27/21
 addParameter(p,'forceOverwrite',false,@islogical);
+addParameter(p,'numIters',0,@isnumeric);
 
 parse(p,varargin{:});
 basename        = p.Results.basename;
@@ -94,10 +95,11 @@ hpFreq          = p.Results.hpfreq;
 forceOverwrite  = p.Results.forceOverwrite;
 tempmatchtThr   = p.Results.tempmatchThr;
 SNRThr          = p.Results.SNRThr;
-
+numIters        = p.Results.numIters;
 
 cd(basepath)
-
+disp(['SNRThr is: ', num2str(SNRThr)]);
+disp(['numIters is: ', num2str(numIters)]);
 %% Check this:
 % These are now hardcoded, unsure if we need to do something with that
 buttOrder = 1;
@@ -136,7 +138,7 @@ elseif strcmpi(hpfilter, 'fir1')
     filtJuxta = zscore(filtfilt(b,a,dJuxtadata));
 end
 
-yy = snr(juxtadata.times,filtJuxta);
+% yy = snr(juxtadata.times,filtJuxta);
 
 %% diagnostic section to check out the difference between the filters
 compareFilters = 0; %keeping this one for now
@@ -193,7 +195,7 @@ fir1spk = filtJuxta(fir1sIxAll); % remember that the butterworth is what ultimat
 fir1RawWaveform = {mean(fir1spk)};
 %% Integral Matching section
 
-[spkInts] = EA_IntegralMatching(spk);
+% [spkInts] = EA_IntegralMatching(spk); %turned off for now 8/3/21
 
 %% Template Matching section
 normalTemplateMatching = 1;
@@ -249,15 +251,16 @@ end
 % and scan the original spk group (spkReserve) while keeping the same
 % thresholds
 
-numIters = 3;
+storeAllIters = 1;
 
 if numIters >= 1
     templateIter = 1;
 elseif numIters < 1
     templateIter = 0;
+    storeAllIters = 0;
 end
 
-storeAllIters = 1;
+
 
 if templateIter == 1    
     
@@ -329,8 +332,12 @@ juxtaSpikes.tsReserve   = tsReserve;
 juxtaSpikes.timesReserve= timesReserve;
 juxtaSpikes.sIxReserve  = sIxReserve;
 
+if storeAllIters == 1
+    if numIters >= 2
 juxtaSpikes.allIters    = allIters;
+    end
 juxtaSpikes.finalIter   = finalIter;
+end
 %% Plot
 % % This can probably go
 

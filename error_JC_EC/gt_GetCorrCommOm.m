@@ -127,7 +127,7 @@ for iExtraSpike = 1:length(ExtraSpikesTimes{highestChannelCorr})
          
             cco_timevector.com(1, commission_error_num) = selected_commission_pt;
             cco_indexvector.com(1, commission_error_num) = closestExtra_Com;
-          
+            
         end
     end
 end
