@@ -1,4 +1,4 @@
-function  [cco_timevector, cco_indexvector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, highestChannelCorr, lfp_extra,lfp_juxta, opts, sessions, iSess)
+function  [cco_timevector, cco_indexvector, num_CorrComOm] = gt_GetCorrCommOm_new(JuxtaSpikesTimes, ExtraSpikesTimes, bestCluster, lfp_extra,lfp_juxta, opts, sessions, iSess)
 
 % working on this: %if possible: split num matches, commissions and ommissions and time
 % vectors from obtaining the lfp matrices
@@ -24,8 +24,8 @@ for iSpikeJuxta = 1:length(JuxtaSpikesTimes) %4
 % ******** EA-> Found the problem, it is looking at hightestChannelCorr
 % instead of the actual cluster of interest (ex, highestchann = 31 but the
 % actual cluster is cluster 10)
-    for iSpikeExtra = 1:length(ExtraSpikesTimes{highestChannelCorr}) %8599
-        selectedExtraSpike = ExtraSpikesTimes{highestChannelCorr}(iSpikeExtra);
+    for iSpikeExtra = 1:length(ExtraSpikesTimes{bestCluster}) %8599
+        selectedExtraSpike = ExtraSpikesTimes{bestCluster}(iSpikeExtra);
         
         %collecting correlated values % match centered on Juxta
         %rangeSpike allows for a millisecond of delay in the extracellular
@@ -89,9 +89,9 @@ matchesForSanity = 0;
 cco_timevector.com      = [];
 cco_indexvector.com     = [];
 
-for iExtraSpike = 1:length(ExtraSpikesTimes{highestChannelCorr})
+for iExtraSpike = 1:length(ExtraSpikesTimes{bestCluster})
     match_count = 0;
-    selectedExtraSpike = ExtraSpikesTimes{highestChannelCorr}(iExtraSpike);
+    selectedExtraSpike = ExtraSpikesTimes{bestCluster}(iExtraSpike);
     
     for iJuxtaspike = 1:length(JuxtaSpikesTimes)
         selectedJuxtaSpike = JuxtaSpikesTimes(iJuxtaspike);

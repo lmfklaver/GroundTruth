@@ -16,15 +16,18 @@ for i = 1:spikes.numcells
 currExtraTimes = spikes.times{i};
     
 binnedExtraTimes = discretize(currExtraTimes,analoginTimes,'IncludedEdge','right');
-binnedExtraTimes_missRem = rmmissing(binnedExtraTimes);
-binnedExtraPos = filtered_pos(binnedExtraTimes_missRem);
+[~, missRemIdx] = rmmissing(binnedExtraTimes);
+
+% [binnedExtraTimes_missRem] = rmmissing(binnedExtraTimes);
+% binnedExtraPos = filtered_pos(binnedExtraTimes_missRem);
+binnedExtraPos = filtered_pos(missRemIdx);
 
 numericExtraPos = discretize(binnedExtraPos,binEdges,'IncludedEdge','right');
 
 extSpkPosCell{i} = numericExtraPos;
 
-[posCounts,posNumerVals] = groupcounts(extSpkPosCell{i}');
-
+% [posCounts,posNumerVals] = groupcounts(extSpkPosCell{i}');
+    [posCounts,posNumerVals]=hist(extSpkPosCell{i}');
 extSpkLapPosMat(i,posNumerVals') = posCounts';
 
 
