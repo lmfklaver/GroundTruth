@@ -45,7 +45,10 @@ setappdata(fig_PointClick,'initPointsScatt', initPointsScatt);
 hold(ax2,'off')
 xlim(ax2,[lowWinBound upWinBound]);
 
-initPointsRast = scatter(ax1,JuxtaSpikesTimes(:),(JuxtaSpikesTimes(:)*0)+1,2000,'|','LineWidth',1.25);%Took this out
+%this doesnt work in 2018b
+% initPointsRast = scatter(ax1,JuxtaSpikesTimes(:),(JuxtaSpikesTimes(:)*0)+1,2000,'|','LineWidth',1.25);%Took this out
+% lianne tries this
+initPointsRast = plot([JuxtaSpikesTimes(:)';JuxtaSpikesTimes(:)'],repmat([0; 1],1,length(JuxtaSpikesTimes)));
 setappdata(fig_PointClick,'initPointsRast', initPointsRast);
 % % % xline(ax1,JuxtaSpikesTimes(:),'b');
 % xline(ax1,JuxtaSpikesTimes(juxtaInx),'b');

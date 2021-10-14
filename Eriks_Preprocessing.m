@@ -306,6 +306,10 @@ binEdges(1,end+1) = binEnd(1,end);
 jxtSpkLapPosMat = zeros(lap.num,100);
 aveISIs = zeros(lap.num,100); % used for isi later, can ignore for now
 
+
+
+
+
 %% making the juxta plots
 for i = 1:lap.num
     
@@ -516,9 +520,9 @@ EA_MakeSingleCluster(basename,mergedJuxtaNum,mergedJuxtaCell,1);
 
 % % % % EA_PointAndClickAdventure(jSpkTimes,basename)
 
-pathway = ['D:\GroundTruth\' basename]; % pathway for save location 
-EA_PointAndClickAdventure(JuxtaSpikesTimes,basename,pathway) 
-
+pathway = ['D:\Data\GroundTruth\' basename]; % pathway for save location 
+% EA_PointAndClickAdventure(JuxtaSpikesTimes,basename,pathway) 
+EA_PointAndClickAdventure(juxtaSpikes.times{1},basename,pathway) 
 % % % EA_PointAndClickAdventure(jSpkTimes,basename,pathway)
 % jSpkTimes will be the variable name for the edited spike times 
 
