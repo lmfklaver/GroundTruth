@@ -15,7 +15,11 @@
 %   sessions = {'basename_1' ... 'basename_n'};
 
 % sessions =  {'m14_190326_160710_cell1'};
-sessions =  {'m15_190315_145422'};
+basepath = cd;
+basename = bz_BasenameFromBasepath(basepath);
+sessions = {basename};
+
+%%%% =  {'m15_190315_150831_cell1'};
 areas = {'hpc'};
 proximThresh = 20;
 
@@ -23,23 +27,9 @@ proximThresh = 20;
 %'m41_190621_125124_cell1',...
 %'m52_190731_145204_cell2',...
 
-% params
-
-% params.juxtachan = 1;
-% variable ops
-% ops.intervals = [0 Inf];%[480 Inf]; %sec
-% ops.downsamplefactor = 1;
-% ops.SNRthr = 7; % figure this one out per cell PARAM SEARCH
-% ops.filter = 'butterworth';
-% ops.hpfreq = 1000;
-% ops.buttorder = 1;
-% ops.firorder = 256;
-% ops.templateMatch = 1;
-% ops.spikeSamps = -40:55;
-% ops.doPlots = 0;
-% 
-% ops.ccgBinSize = 0.0015;
-% ops.ccgDur = 0.1;
+intervals           = [0 inf];
+SampFreq            =   30000;
+ops.doPlots             =   0;
 
 myDataPath = 'D:\GroundTruth\';
 areaOfInterest = 'hpc';
@@ -73,9 +63,17 @@ for iSess = 1:length(sessions)
 %             params.chansinorder = [1 2 3 4 0];
 %         end
         
+SNR1_temp = 4;
+numIter1_temp = 2;
+% tempmatchThr1 = 0.8;
+SNR2_temp = 20;
+numIter2_temp = 1;
+% tempmatchThr2 = 0.8;
+
         [juxtaSpikes] = GetJuxtaSpikes(basepath, 'intervals', intervals,'juxtachan',0, ...
             'templateMatch',true,'filter','butterworth','saveMat',true,...
-            'forceOverwrite',true,'SNRThr',4, 'numIters',2);
+            'forceOverwrite',true,'SNRThr',SNR1_temp, 'numIters',numIter1_temp);
+% ,'tempmatchThr',tempmatchThr1
 %         remember that 7/14/21 you changed the default filter to fir1
 % 8/3/21 - bout to commit some real nonsense plays with two GetJuxtaSpikes.
 % tyring to run two analyses with a high SNR run through and a low SNR run
@@ -86,8 +84,9 @@ for iSess = 1:length(sessions)
             
             [juxtaSpikes2] = GetJuxtaSpikes(basepath, 'intervals', intervals,'juxtachan',0, ...
                 'templateMatch',true,'filter','butterworth','saveMat',true,...
-                'forceOverwrite',true,'SNRThr',20, 'numIters',1);
-            
+                'forceOverwrite',true,'SNRThr',SNR2_temp, 'numIters',numIter2_temp);
+% ,'tempmatchThr',tempmatchThr2
+
             juxta1 = juxtaSpikes.finalIter.ts;
             juxta2 = juxtaSpikes2.ts{1}; %this may be a source of confusion
             dupTimeInt = 0.002;
@@ -105,9 +104,9 @@ for iSess = 1:length(sessions)
             diffJuxtaSpkInx = find(diffJuxtaSpikes <= (proximThresh/SampFreq));
             juxtaSpikes.times{1}(diffJuxtaSpkInx) = [];
 
-            % intervals will be read from excel file
+            % intervals will be read from excel ffile
             basename = bz_BasenameFromBasepath(basepath);
-            save([basename, '.juxtaSpikes.mat'], 'juxtaSpikes')
+            save([basename, '.juxtaSpikes.mat'], 'juxtaSpikes', 'juxtaSpikes2','mergedJuxta')
         end
         allJuxtas = juxtaSpikes.times;
 

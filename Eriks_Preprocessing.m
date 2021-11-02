@@ -7,7 +7,7 @@ session = bz_getSessionInfo;
 session.spikeGroups; %
 
 %% Define Generic Options   
-    opts.rangeSpkBin        = .002; %binsize for extra occurring before or after juxta % maybe a bit wider for james' irc2 output?
+    opts.rangeSpkBin        = .0015; %binsize for extra occurring before or after juxta % maybe a bit wider for james' irc2 output?
     opts.timWinWavespec     = 250; %ms
     opts.doSave             = 0;
     opts.freqRange          = [1 500];
@@ -76,6 +76,7 @@ analogin.ts = downsample(analogin_NoDs.ts,300);
 %check something with paths
 % cd(pathInfo.RecPath)
 spikes = bz_LoadPhy; % edit bz_LoadPhy to check path things gives you .spikes.cellinfo.mat 
+
 % you've edited bz_LoadPhy to look into ks2 for the .npy files
 
 % also for other sorters 
@@ -101,10 +102,18 @@ spikes = bz_LoadPhy; % edit bz_LoadPhy to check path things gives you .spikes.ce
 % gt_figureEMGRippleCCO.m
 
 iSess = 1;
+sessions = {basename};
 pathInfo.JuxtaPath = ['D:\GroundTruth\', sessions{iSess}];% these are for the 'firing_true.mda' found in the main file
 pathInfo.ExtraPath = ['D:\GroundTruth\', sessions{iSess},'\ks2'];% these are for the 'firing.mda' files found in kilosort
 pathInfo.RecPath = ['D:\GroundTruth\', sessions{iSess}];
 [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpikesTimes, bestCluster] = gt_LoadJuxtaCorrExtra(pathInfo,params,opts);
+
+spikeMatcher.highChan = highestChannelCorr;
+spikeMatcher.bestClust = bestCluster;
+
+save([basename, '.spikeMatcher.mat'], 'spikeMatcher')
+
+
 
 % get commission and omission
 
@@ -116,7 +125,9 @@ pathInfo.RecPath = ['D:\GroundTruth\', sessions{iSess}];
 
 [cco_timevector, cco_indexvector, num_CorrComOm] = gt_GetCorrCommOm(JuxtaSpikesTimes, ExtraSpikesTimes, bestCluster, lfp_extra,lfp_juxta, opts, sessions, iSess); 
 
-[cco_timevector2,cco_indexvector2,numMatch_Error] = EA_Matches_Errors(JuxtaSpikesTimes,ExtraSpikesTimes,highestChannelCorr, bestCluster,opts);
+
+
+% % % [cco_timevector2,cco_indexvector2,numMatch_Error] = EA_Matches_Errors(JuxtaSpikesTimes,ExtraSpikesTimes,highestChannelCorr, bestCluster,opts);
 
 % ********************
 % This is the end of the comission ommission data
@@ -515,8 +526,9 @@ EA_MakeSingleCluster(basename,mergedJuxtaNum,mergedJuxtaCell,1);
 % jSpkTimes
 
 % % % % EA_PointAndClickAdventure(jSpkTimes,basename)
-
+load([basename '.juxtaSpikes.mat'])
 pathway = ['D:\GroundTruth\' basename]; % pathway for save location 
+JuxtaSpikesTimes = juxtaSpikes.times{1};
 EA_PointAndClickAdventure(JuxtaSpikesTimes,basename,pathway) 
 
 % % % EA_PointAndClickAdventure(jSpkTimes,basename,pathway)

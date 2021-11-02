@@ -10,6 +10,11 @@ function [highestChannelCorr,  lfp_juxta, lfp_extra, JuxtaSpikesTimes, ExtraSpik
 
 JuxtaChan = length(spikesJCEC.shankID); % Last dimension needs to be the JuxtaChannel for this to work.
 checkCorrs = squeeze(ccg(:,:,JuxtaChan));
+%%%%%%%%%%
+%Erik's additon
+% checkCorrs2 = checkCorrs(:,1:end-1);
+checkCorrs = checkCorrs(:,1:end-1);
+%%%%%%%%%%
 maxCC = max(max(checkCorrs)); % gives you EC cluster with highest correlation to JC
 [~,c] = find(checkCorrs == maxCC);
 

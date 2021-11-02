@@ -20,6 +20,5 @@ for iSpikeJuxta = 1:length(juxta2)
     mergedJuxta = sort(juxta1);
 end
 
-
 end
 

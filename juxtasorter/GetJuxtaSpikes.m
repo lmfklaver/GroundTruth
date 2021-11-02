@@ -156,6 +156,7 @@ end
 % Choose amount of samples around threshold crossing to pull spike waveform
 % from
 tIx = -40:55; % hardcoded now, i don't think this needs to be changed
+% tIx = -5:10;
 
 % Define a threshold (NEEDS WORK)
 SNRthrFactor = SNRThr; % figure this one out per cell
